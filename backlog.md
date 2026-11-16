@@ -92,7 +92,7 @@ Status: `[ ]` belum · `[~]` sedang · `[x]` selesai. Tugas selesai dicentang, t
 - [x] Perbaiki `verify-docs-vs-stitch.py`: identitas layar dinilai dari **slug + resource name**, bukan judul (3 layar berbagi `<h1>`, dan Stitch pernah memuat 2 layar berjudul sama — judul bukan identitas) + ringkasan + exit code
 - [x] Temukan & perbaiki **`updateTime` tidak seragam**: `index.md` `09:28:11Z` · `docs/DESIGN.md` `10:13:02Z` · DELTA `09:28:11Z` · live `18:29:53Z`. Diseragamkan ke nilai live + catatan bahwa timestamp bukan bukti isi snapshot
 - [x] Tambah **gerbang L** (updateTime seragam di dokumen hidup) + `scripts/test-gates.py` jadi **14 gate terbukti bisa gagal**
-- [x] Persempit pola basi `byte-identik` di gerbang A — pola lebar menangkap klaim **sah** ("HTML snapshot byte-identik dengan live") dan membuat gerbang merah palsu
+- [x] **Perbaiki gerbang K** — 2026-11-16: gerbang itu membandingkan daftar dokumen dengan keluaran `git add -An .`, yang hanya benar **sebelum commit pertama**. Setelah commit `9f7a36d` ia merah permanen (`K: 13 dokumen tidak ter-stage`) padahal tidak ada dokumen yang hilang. Diganti `git check-ignore` per dokumen — itu yang sebenarnya dimaksud "dokumen akan ikut commit atau tidak". Uji negatif ke-15 ditambahkan dan ia **butuh berkas baru** (`docs/Z-dokumen-uji.md`), karena git tidak menerapkan `.gitignore` pada berkas yang sudah tercatat. Hasil: **15 gate terbukti bisa gagal**- [x] Persempit pola basi `byte-identik` di gerbang A — pola lebar menangkap klaim **sah** ("HTML snapshot byte-identik dengan live") dan membuat gerbang merah palsu
 - [x] Hapus skrip diagnosa sementara (`diag-flaky.py`) setelah membuktikan `list_screens` stabil 6/6 = 20 entri
 - [ ] **Commit pertama** — repo ini masih **0 commit** (`git rev-list --count HEAD` → fatal). Semua ignore-rule baru belum pernah diuji oleh commit nyata, dan tidak ada riwayat versi. Jalankan `git add -A && git commit` sebelum M0. *(belum dikerjakan — menunggu izin; user belum meminta commit)*
 
@@ -107,7 +107,7 @@ Status: `[ ]` belum · `[~]` sedang · `[x]` selesai. Tugas selesai dicentang, t
 - [x] `LICENSE` GPL-3.0-or-later + `NOTICE` kredit NewPipeExtractor — 2026-11-16 (teks GPL diambil dari gnu.org, bukan diketik dari ingatan)
 - [x] `README.md`: cara build, batasan hukum, disclaimer merek — 2026-11-16 (termasuk catatan RAM mesin 7,4 GB + `local.properties`)
 - [~] Setup Compose + Material 3 + theme (token dari `docs/DESIGN.md`) — Compose + Material 3 selesai; **tema belum**. `MainActivity` masih memakai `darkColorScheme()` bawaan dan ditandai SEMENTARA di kode. Tema `NocturneTheme` = Fase 1 `PLAN.md`
-- [x] Setup CI: lint + test + assembleDebug — 2026-11-16, `.github/workflows/ci.yml`. **Belum pernah dijalankan di GitHub** (baru ditulis); `lintDebug` + `assembleDebug` sudah hijau lokal, unit test masih `NO-SOURCE`
+- [x] Setup CI: lint + test + assembleDebug — 2026-11-16, `.github/workflows/ci.yml`. **Terbukti jalan di GitHub**: run #3 (`afd548d8`) **HIJAU**. Dua run sebelumnya gagal karena lingkungan, bukan kode: #1 `gradlew` tercatat mode 100644 → `Permission denied` exit 126; #2 metaspace 384 MiB → lint `InferredThreadDetector` gagal init. Rincian + perbaikan: `keputusan.md` 2026-11-16
 - [x] APK debug terpasang di perangkat uji — 2026-11-16, `adb install -r` sukses di perangkat wireless, `MainActivity` jalan (`pidof` mengembalikan PID)
 
 ## M1 — Resolver hidup (± 1 minggu)

@@ -427,19 +427,36 @@ if big:
     print(f"  !! .rea/ ikut terseret ({len(big)} berkas)")
     FAIL.append(f"K: .rea/ ikut di-stage ({len(big)} berkas)")
 
-# SETIAP dokumen wajib ter-stage. Diperiksa per berkas, bukan dari daftar pola —
-# membaca daftar pola bukan verifikasi (pola bisa benar tapi tidak berlaku).
+# SETIAP dokumen wajib ikut ke-commit. Diperiksa per berkas dengan
+# `git check-ignore`, bukan dari daftar pola — membaca daftar pola bukan
+# verifikasi (pola bisa benar tapi tidak berlaku).
+#
+# Diperbaiki 2026-11-16: bagian ini dulu membandingkan dokumen dengan keluaran
+# `git add -An .`. Cara itu hanya benar selama repo BELUM punya commit — setelah
+# commit pertama, berkas yang tidak berubah tidak lagi muncul di keluaran itu,
+# jadi gate K merah permanen padahal tidak ada dokumen yang hilang (terbukti:
+# "K: 13 dokumen tidak ter-stage" sesaat setelah commit 9f7a36d). `check-ignore`
+# mengukur hal yang sebenarnya dimaksud.
+def is_ignored_quiet(path):
+    r = subprocess.run(["git", "check-ignore", "-v", path],
+                       capture_output=True, text=True)
+    out = r.stdout.strip()
+    if not out:
+        return False
+    return not out.split("\t")[0].split(":")[-1].startswith("!")
+
+
 docs_all = sorted({p.replace("\\", "/") for p in
                    glob.glob("docs/*.md") + glob.glob("docs/**/*.md", recursive=True)
                    + glob.glob("flows/*.md") + ["index.md", "backlog.md",
                                                 "keputusan.md", "CLAUDE.md",
                                                 ".gitignore"]})
-missing_docs = [d for d in docs_all if d not in staged]
-print(f"  dokumen diperiksa: {len(docs_all)} | tidak akan ter-stage: {len(missing_docs)}")
+missing_docs = [d for d in docs_all if is_ignored_quiet(d)]
+print(f"  dokumen diperiksa: {len(docs_all)} | ter-ignore (tidak akan ke-commit): {len(missing_docs)}")
 for d in missing_docs:
-    print(f"  !! dokumen TIDAK akan ter-stage: {d}")
+    print(f"  !! dokumen TER-IGNORE, tidak akan ke-commit: {d}")
 if missing_docs:
-    FAIL.append(f"K: {len(missing_docs)} dokumen tidak ter-stage")
+    FAIL.append(f"K: {len(missing_docs)} dokumen ter-ignore")
 if not k_ok:
     FAIL.append("K: .gitignore salah")
 

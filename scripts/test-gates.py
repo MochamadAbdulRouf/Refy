@@ -50,6 +50,34 @@ def with_edit(path, old, new, label, expect_fail=True):
         os.remove(bak)
 
 
+def with_untracked_ignored_doc(label):
+    """
+    Buat dokumen BARU (belum di-track git), lalu abaikan lewat `.gitignore`.
+
+    Kenapa perlu cara berbeda: `git check-ignore` melaporkan "tidak diabaikan"
+    untuk berkas yang SUDAH tercatat di git — aturan `.gitignore` memang tidak
+    berlaku pada berkas yang sudah di-track secara sengaja. Jadi satu-satunya
+    bentuk nyata dari "dokumen hilang dari commit" adalah dokumen baru yang
+    langsung tertutup pola abaikan. Kasus ini karena itu butuh berkas baru.
+    """
+    doc = "docs/Z-dokumen-uji.md"
+    bak = tempfile.mktemp(suffix=".bak")
+    shutil.copy2(".gitignore", bak)
+    try:
+        io.open(doc, "w", encoding="utf-8").write("# dokumen uji\n")
+        s = io.open(".gitignore", encoding="utf-8", newline="").read()
+        io.open(".gitignore", "w", encoding="utf-8", newline="").write(
+            s + "\n# pola uji\n" + doc + "\n")
+        rc, out = run_check()
+        ok = rc != 0
+        return ok, f"{label}: exit={rc} {'TERBACA' if ok else 'TIDAK TERBACA'} {show_fail(out)}"
+    finally:
+        shutil.copy2(bak, ".gitignore")
+        os.remove(bak)
+        if os.path.exists(doc):
+            os.remove(doc)
+
+
 CASES = [
     # G — nomor layar. Lima bentuk yang PERNAH salah di PRD section 5, dua di
     # antaranya memakai prosa Indonesia ("Profil artis", "opsi per lagu").
@@ -106,6 +134,13 @@ for path, old, new, label in CASES:
         if not ok:
             fails += 1
 
+# Kasus yang butuh berkas baru, bukan suntingan. Lihat with_untracked_ignored_doc.
+extra = [with_untracked_ignored_doc("K dokumen baru ter-ignore")]
+for ok, msg in extra:
+    print(f"  {'OK   ' if ok else 'GAGAL'} {msg}")
+    if not ok:
+        fails += 1
+
 rc, _ = run_check()
 print("\n  keadaan akhir: check-consistency exit", rc, "(harap 0)")
 if rc != 0:
@@ -115,5 +150,5 @@ print("=" * 62)
 if fails:
     print(f"HASIL: {fails} masalah — gate tidak bisa gagal ATAU case tidak cocok")
     sys.exit(1)
-print(f"HASIL: {len(CASES)} gate terbukti bisa gagal, berkas bersih setelah dipulihkan")
+print(f"HASIL: {len(CASES) + len(extra)} gate terbukti bisa gagal, berkas bersih setelah dipulihkan")
 sys.exit(0)

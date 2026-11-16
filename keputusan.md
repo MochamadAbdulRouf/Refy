@@ -498,3 +498,30 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 
 **Hasil Fase 0:** `assembleDebug` hijau (APK 11,2 MB) · `lintDebug` hijau · APK **terpasang dan jalan** di perangkat uji (`pidof` mengembalikan PID) · `LICENSE` (teks GPL resmi dari gnu.org) + `NOTICE` + `README.md` + CI `.github/workflows/ci.yml` ditulis.
 **Belum:** tema `NocturneTheme` (Fase 1) — `MainActivity` masih memakai `darkColorScheme()` bawaan, ditandai SEMENTARA di kode. CI belum pernah dijalankan di GitHub (baru ditulis).
+---
+## 2026-11-16 — Repo terbit, lalu CI hijau setelah dua kegagalan lingkungan
+**Konteks:** pemakai memberi remote `https://github.com/MochamadAbdulRouf/Refy.git` dan meminta commit. Commit `9f7a36d` (79 berkas) terkirim; CI run #3 (`afd548d8`) **hijau**.
+**1. `git push` di mesin ini RUSAK — dipakai jalur cadangan, dicatat sebagai utang**
+- Gejala: `error: failed to push some refs` tanpa sebab, berulang untuk semua varian (`--dry-run`, `--no-thin`, `protocol.version=0`, `sslBackend=openssl`, `postBuffer` besar, kredensial disuntik lebih dulu).
+- Bukti dari `GIT_TRACE_CURL`: klien **tidak pernah mengirim POST**; percakapan berhenti setelah iklan ref diterima.
+- Yang sudah disingkirkan: repo publik & bisa dibaca (HTTP 200), kredensial GCM punya scope `repo, gist, workflow`, POST manual ke `.../git-receive-pack` dibalas **200**, `pack-objects` jalan, push ke repo lokal jalan.
+- Tersangka: instalasi Git for Windows tidak utuh — `mingw64/libexec/git-core/` **tanpa `git-upload-pack.exe` dan `git-receive-pack.exe`**.
+- **Jalan yang dipakai:** pack dibuat lokal (`git pack-objects --stdout --revs`, dengan `^<sha-lama>` untuk push bertambah), lalu body receive-pack dikirim `curl` ke endpoint `git-receive-pack` memakai kredensial dari `git credential fill`. Server balas `unpack ok` + `ok refs/heads/master`; SHA lokal = SHA remote (diverifikasi `ls-remote` + API GitHub). Token tidak pernah ditampilkan atau disimpan.
+- **Alternatif ditolak:** GitHub REST API untuk membuat commit (≈85 permintaan, dan commit-nya akan punya SHA berbeda dari lokal sehingga riwayat lokal jadi bercabang); SSH (kunci `id_ed25519` ada tapi belum terdaftar di GitHub); push dari klien lain di mesin ini (semuanya memakai git sistem yang sama).
+- **Utang:** perbaiki instalasi Git (`winget upgrade --id Git.Git -e`). Setelah itu jalur cadangan tidak dipakai lagi.
+
+**2. CI gagal dua kali karena lingkungan, bukan kode**
+| Run | Commit | Sebab | Perbaikan |
+|---|---|---|---|
+| #1 | `9f7a36d` | `./gradlew: Permission denied` → exit 126; `git ls-files -s gradlew` = **100644** | `git update-index --chmod=+x gradlew` → 100755 |
+| #2 | `65c4a2cf` | `lintAnalyzeDebug` gagal: `Can't initialize detector ... InferredThreadDetector`; didahului *"running out of JVM Metaspace ... max heap 1.2 GiB, metaspace 384 MiB"* | `ci.yml` menimpa memori runner: `-Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"` |
+| #3 | `afd548d8` | — | **HIJAU** |
+- **Pelajaran yang dicatat:** Windows tidak merekam bit executable (`core.fileMode=false`), jadi `chmod +x` lokal tidak sampai ke index — harus `git update-index --chmod=+x`. Dan `gradle.properties` disetel untuk mesin 7,4 GB ini, **ikut terbaca CI**; runner tidak punya batasan itu. Dua tempat (proyek + workflow) kini saling merujuk di komentar.
+- **Alternatif ditolak:** *naikkan memori di `gradle.properties` saja* — `-Xmx4g` sudah terbukti membunuh daemon JVM di mesin ini.
+
+**3. Gerbang K diperbaiki — ia merah permanen setelah commit pertama**
+- Gejala: `python scripts/check-consistency.py` gagal dengan `K: 13 dokumen tidak ter-stage` **segera setelah commit `9f7a36d`**, padahal tidak ada satu dokumen pun yang hilang.
+- Sebab: gate K membandingkan daftar dokumen dengan keluaran `git add -An .`. Keluaran itu hanya memuat berkas yang **berubah**; berkas yang sudah di-commit dan tidak berubah tidak muncul → dianggap "tidak akan ter-stage". Artinya gate ini hanya sah selama repo belum punya commit — dan repo ini baru saja dapat commit pertama.
+- Perbaikan: tiap dokumen diuji dengan `git check-ignore -v`, lalu dianggap gagal kalau benar-benar ter-ignore. Itu mengukur hal yang dimaksud: "dokumen akan ikut commit atau tidak". Pemeriksaan `git add -An .` tetap dipakai untuk tujuan aslinya (mendeteksi `.rea/` terseret).
+- **Uji negatifnya tidak bisa memakai berkas yang sudah ada:** `git check-ignore` melaporkan "tidak diabaikan" untuk berkas yang sudah tercatat di git, karena `.gitignore` memang tidak berlaku pada berkas yang sudah di-track. Jadi kasus ujinya harus **membuat dokumen baru lalu mengabaikannya** — ditambahkan `with_untracked_ignored_doc()` di `scripts/test-gates.py`. Hasil: 15 gate terbukti bisa gagal (dari 14).
+- **Alternatif ditolak:** *membiarkan gate K merah dan mencatatnya sebagai "normal setelah commit"* — gerbang yang selalu merah akan diabaikan orang, dan itu persis cara gerbang berhenti berguna; lebih buruk lagi, merah permanen menyembunyikan kegagalan K yang sungguhan.
