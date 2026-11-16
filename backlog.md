@@ -106,7 +106,7 @@ Status: `[ ]` belum · `[~]` sedang · `[x]` selesai. Tugas selesai dicentang, t
 - [x] `git init` tersimpan, struktur folder Gradle dibuat — 2026-11-16 (`app/`, `gradle/`, `settings.gradle.kts`, `build.gradle.kts`, wrapper 9.9.1 ikut commit)
 - [x] `LICENSE` GPL-3.0-or-later + `NOTICE` kredit NewPipeExtractor — 2026-11-16 (teks GPL diambil dari gnu.org, bukan diketik dari ingatan)
 - [x] `README.md`: cara build, batasan hukum, disclaimer merek — 2026-11-16 (termasuk catatan RAM mesin 7,4 GB + `local.properties`)
-- [~] Setup Compose + Material 3 + theme (token dari `docs/DESIGN.md`) — Compose + Material 3 selesai; **tema belum**. `MainActivity` masih memakai `darkColorScheme()` bawaan dan ditandai SEMENTARA di kode. Tema `NocturneTheme` = Fase 1 `PLAN.md`
+- [x] Setup Compose + Material 3 + theme (token dari `docs/DESIGN.md`) — 2026-11-16: Compose + Material 3 sudah ada sejak Fase 0; **tema selesai di Fase 1** (`ui/theme/`: Color, Type, Shape, Dimens, Theme). Font Plus Jakarta Sans dibundel sebagai variable font + lisensi OFL. Tiga selisih dokumen-vs-HTML diputuskan & dicatat di `keputusan.md` 2026-11-16
 - [x] Setup CI: lint + test + assembleDebug — 2026-11-16, `.github/workflows/ci.yml`. **Terbukti jalan di GitHub**: run #3 (`afd548d8`) **HIJAU**. Dua run sebelumnya gagal karena lingkungan, bukan kode: #1 `gradlew` tercatat mode 100644 → `Permission denied` exit 126; #2 metaspace 384 MiB → lint `InferredThreadDetector` gagal init. Rincian + perbaikan: `keputusan.md` 2026-11-16
 - [x] APK debug terpasang di perangkat uji — 2026-11-16, `adb install -r` sukses di perangkat wireless, `MainActivity` jalan (`pidof` mengembalikan PID)
 
@@ -204,7 +204,7 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 - [ ] Bottom nav 4 tab: Home / Discover / Library / Create — bentuk **pil mengambang** (**D11**, mengikat): `bottom-4`, `inset-x-4`, `max-w-sm`, `h-[68px]`, `rounded-full`, `bg-[#121621]/85`, `blur(30px)`, border putih 1–1.5px + glow. Kanon `home-screen-243ea0d8`
 - [ ] **Remap 17 layar ke palet Kubu B** — tabel remap `docs/DESIGN.md` §1, ukur dengan `python scripts/analyze-snapshot.py`
 - [ ] Ganti tab "Buat" → **"Create"** di bottom nav semua layar (D6) — 9 layar masih "Buat" per 2026-11-10
-- [ ] Tema `NocturneTheme` dari token `docs/DESIGN.md` §1 — palet **Kubu B** (canvas `#09090B`, surface `#141418`, accent `#8B5CF6`), remap layar Kubu A pakai tabel remap. Semua warna lewat token tema, nol hex di Composable.
+- [x] Tema `NocturneTheme` dari token `docs/DESIGN.md` §1 — 2026-11-16 (Fase 1). Palet **Kubu B** (canvas `#09090B`, surface `#141418`, accent `#8B5CF6`), seluruh warna lewat token tema — nol hex di Composable, dibuktikan `grep` (`Color(0x` di luar `ui/theme/` = 0)
 - [ ] Komponen kaca: `RepaintBoundary` + `ColoredBox` dasar sebelum blur + jalur mundur tanpa blur — **prioritas naik 2026-11-10**: nav pil (blur 30px, garis putih nyata, glow luar) + mini-player (blur 36px) kini berdampingan dengan jarak <20px, dua kaca rona terang yang paling mudah memicu pita Mali
 - [ ] Semua string lewat resource i18n (tidak ada teks hardcoded di Composable) — daftar periksa: `docs/I18N-KEYS.md`
 - [ ] Semua skenario Gherkin US-01...US-05 lolos

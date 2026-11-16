@@ -5,7 +5,7 @@
 **Sumber musik v0.1:** katalog YouTube Music via extractor komunitas
 **Lisensi rencana:** GPL-3.0-or-later
 **Repositori:** `D:\Coding\Refy`
-**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0 (scaffold Gradle) selesai 2026-11-16**: `assembleDebug` hijau, APK terpasang di perangkat uji. Berikutnya Fase 1 (tema) — urutan di `PLAN.md`
+**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0 & 1 selesai 2026-11-16**: scaffold Gradle hijau + tema `NocturneTheme` (token Kubu B) terpasang di perangkat; CI run #3 hijau. Berikutnya Fase 2 (kerangka & komponen) — urutan di `PLAN.md`
 **Desain:** Stitch project **Electric Purple Music App** (`projects/9190295645942987043`), design system **Nocturne Audio** (`assets/9feaa5b53730417e8c1d163ffc007c63`), **18 layar UI + 2 aset** (17 layar nyata + 1 artefak)
 **Perhatian:** palet **sudah dikunci** — Kubu B (D8). Bottom nav **pil mengambang** (D11). Lihat `docs/DESIGN.md` §1 (remap) dan §6.2 (nav).
 
@@ -54,7 +54,7 @@ Mini-player        : melayang 56px, 88–92px di atas dasar (di atas pil nav), p
 | Token desain | `docs/DESIGN.md` — diukur dari HTML; palet **terkunci Kubu B** (D8) |
 | Inventaris string | `docs/I18N-KEYS.md` — dibekukan 2026-11-12 |
 | Keputusan terbuka | **D1–D13 tertutup**; D14–D16 dibuka dengan default tertulis (tidak menghambat M0) |
-| Fondasi kode (M0) | **Berjalan 2026-11-16** — Fase 0 selesai: scaffold Gradle (AGP 9.5.1, Gradle 9.9.1, Kotlin 2.3.20, Hilt 2.60.1), Compose + Material 3, CI, `LICENSE`/`NOTICE`/`README.md`, APK debug terpasang di perangkat uji. **Fase 1 (tema `NocturneTheme`) belum** — rincian `PLAN.md` |
+| Fondasi kode (M0) | **Berjalan 2026-11-16** — Fase 0: scaffold Gradle (AGP 9.5.1, Gradle 9.9.1, Kotlin 2.3.20, Hilt 2.60.1), Compose + Material 3, CI hijau di GitHub, `LICENSE`/`NOTICE`/`README.md`, APK terpasang. Fase 1: tema `NocturneTheme` + token Kubu B di `ui/theme/`, font Plus Jakarta Sans. **Berikutnya Fase 2** (nav pil + mini-player + kerangka tab) — rincian `PLAN.md` |
 
 ---
 

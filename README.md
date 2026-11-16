@@ -18,8 +18,8 @@ Tema: **dark-only** untuk v0.1 (D12)
 | Bagian | Keadaan |
 |---|---|
 | Scaffold Gradle + Compose + Material 3 + Hilt | ada, `assembleDebug` hijau |
-| 1 Activity Compose, DI Hilt aktif | ada (layar masih placeholder) |
-| Tema `NocturneTheme` (token Kubu B) | **belum** — Fase 1 di `PLAN.md` |
+| Tema `NocturneTheme` (token Kubu B) + font Plus Jakarta Sans | ada — `ui/theme/` |
+| 1 Activity Compose, DI Hilt aktif | ada (layar masih penanda tema, bukan UI asli) |
 | Resolver stream (M1) | belum |
 | Pemutar / MediaSession (M2) | belum |
 | Layar UI (M3) | belum — 17 layar desain ada di `.stitch/`, snapshot read-only |

@@ -525,3 +525,26 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 - Perbaikan: tiap dokumen diuji dengan `git check-ignore -v`, lalu dianggap gagal kalau benar-benar ter-ignore. Itu mengukur hal yang dimaksud: "dokumen akan ikut commit atau tidak". Pemeriksaan `git add -An .` tetap dipakai untuk tujuan aslinya (mendeteksi `.rea/` terseret).
 - **Uji negatifnya tidak bisa memakai berkas yang sudah ada:** `git check-ignore` melaporkan "tidak diabaikan" untuk berkas yang sudah tercatat di git, karena `.gitignore` memang tidak berlaku pada berkas yang sudah di-track. Jadi kasus ujinya harus **membuat dokumen baru lalu mengabaikannya** — ditambahkan `with_untracked_ignored_doc()` di `scripts/test-gates.py`. Hasil: 15 gate terbukti bisa gagal (dari 14).
 - **Alternatif ditolak:** *membiarkan gate K merah dan mencatatnya sebagai "normal setelah commit"* — gerbang yang selalu merah akan diabaikan orang, dan itu persis cara gerbang berhenti berguna; lebih buruk lagi, merah permanen menyembunyikan kegagalan K yang sungguhan.
+---
+## 2026-11-16 — Fase 1: token & tema (NocturneTheme)
+**Konteks:** `PLAN.md` Fase 1. Token diambil dari `docs/DESIGN.md` §1–§5, lalu **diverifikasi ulang** terhadap kanon `.stitch/electric-purple/home-screen-243ea0d8.html` memakai `grep -o` (HTML tidak dibaca penuh).
+**1. Font dibundel sebagai variable font**
+- `Plus Jakarta Sans` diunduh dari repo resmi `google/fonts` (`ofl/plusjakartasans`), diambil berkas variable `PlusJakartaSans[wght].ttf` (176 KB) — **bukan** 5 berkas statis, karena jalur statis di repo itu tidak ada (`static/PlusJakartaSans-*.ttf` → 404) dan Google Fonts kini hanya menyajikan woff2.
+- Konsekuensi: butuh `FontVariation.Settings` (API eksperimental Compose) dan **API 26+** — minSdk proyek ini 26, jadi tidak menambah syarat. Alternatifnya (font statis) akan memaksa 5 berkas ±1 MB total.
+- Lisensi SIL OFL 1.1 disalin ke `app/src/main/assets/licenses/PlusJakartaSans-OFL.txt` (kewajiban OFL saat redistribusi), dan disebut di `NOTICE`.
+- **Alternatif ditolak:** (a) *downloadable fonts* lewat Google Play Services — menambah ketergantungan layanan Google di aplikasi yang sengaja tanpa layanan Google; (b) *font sistem* — desain memakai keluarga tunggal yang mengikat (`docs/DESIGN.md` §2).
+
+**2. Tiga selisih dokumen vs HTML — dipakai nilai HTML, dicatat di sini**
+| # | Nilai | Dokumen | HTML kanon | Dipakai |
+|---|---|---|---|---|
+| 1 | Garis pil nav | §5 + §6.2: `rgba(255,255,255,.6)` | `border-white/12` | **12 %** — HTML, dan didukung §5 tingkat 2 yang juga menulis 12 % |
+| 2 | Latar mini-player | §6.3: `#121621` | inline style `rgba(16,15,23,.78)` (`#100F17`) | **`#121621`/78 %** — `#100F17` bukan anggota Kubu B; warna mengikat ke palet (D8, §10) |
+| 3 | Blur mini-player | §5 tabel: 40px (`backdrop-blur-2xl`) | inline `blur(36px)` | **36px** — HTML, dan §6.3 sendiri juga menulis 36px |
+- Untuk #1 dan #3, HTML dan satu bagian dokumen lain sepakat; yang menyimpang hanya satu baris tabel. Untuk #2, aturan pemutus §10 (warna → Kubu B) yang menentukan.
+- Aturan yang dipakai: **§10** — warna dari Kubu B, ukuran/efek dari HTML, font dari manifest.
+
+**3. Gerbang baru yang belum ada: nol hex di luar tema**
+- Bukti Fase 1 dijalankan dengan `grep -rn --include=*.kt -E "Color\(0x|backgroundColor = 0x" app/src/main/java | grep -v /ui/theme/` → harus kosong. Saat pertama dijalankan, ia **menemukan satu pelanggaran**: `@Preview(backgroundColor = 0xFF09090B)` di `MainActivity.kt`. Diperbaiki dengan membuang parameter itu (latar sudah dari `colorScheme.background`).
+- Ini **belum** jadi gerbang otomatis di `check-consistency.py` — alat itu membaca dokumen, bukan kode. Kalau mau ditegakkan otomatis, tempatnya di lint/CI, bukan di gate dokumen. Dicatat sebagai usul, belum dikerjakan.
+
+**Hasil:** `assembleDebug` hijau · APK terpasang & jalan di perangkat uji · screenshot membuktikan `displayHero` dirender ExtraBold asli (variable font bekerja) dan `labelXs` memakai accent · `grep` hex di luar `ui/theme/` = 0.

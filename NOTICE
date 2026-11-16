@@ -43,6 +43,13 @@ OkHttp
   Copyright (C) Square, Inc.
   License: Apache License 2.0
 
+Plus Jakarta Sans (font bundled in the app)
+  Copyright (C) 2020 The Plus Jakarta Sans Project Authors
+  (https://github.com/tokotype/PlusJakartaSans)
+  License: SIL Open Font License 1.1
+  Full license text: app/src/main/assets/licenses/PlusJakartaSans-OFL.txt
+  Source: https://github.com/google/fonts/tree/main/ofl/plusjakartasans
+
 ===============================================================================
 Trademarks and affiliation
 ===============================================================================

@@ -207,13 +207,40 @@ Aturan tiap fitur:
 
 ---
 
-## 4. Token (diisi di Fase 1)
+## 4. Token (diisi Fase 1, 2026-11-16)
 
-*Kosong sampai Fase 1 dijalankan.* Sumber awal: `docs/DESIGN.md` §1 (Kubu B),
-§3 (ukuran: nav pil 68px, mini-player 56px, offset 88–92px, blur nav 30px,
-blur mini-player 36px).
+Sumber: `docs/DESIGN.md` §1 (Kubu B) · §2 · §3 · §4 · §5.
+Diverifikasi ulang terhadap kanon `.stitch/electric-purple/home-screen-243ea0d8.html`
+dengan `grep -o` (bukan `Read` penuh). Kode: `app/src/main/java/.../ui/theme/`.
 
-Format yang akan diisi: nama token · nilai · asal (DESIGN.md §x / HTML grep) · dipakai di.
+| Kelompok | Token | Nilai | Berkas |
+|---|---|---|---|
+| Warna dasar | canvas · surface · elevated · highest | `#09090B` · `#141418` · `#1C1C22` · `#1F1F26` | `Color.kt` |
+| Teks | primary · muted · faint | `#FFFFFF` · `#A1A1AA` · `#71717A` | `Color.kt` |
+| Aksen | accent · bright · deep | `#8B5CF6` · `#A855F7` · `#6366F1` | `Color.kt` |
+| Garis | subtle · chrome · mini-player | putih 6 % · 12 % · 15 % | `Color.kt` |
+| Kaca | header · nav · mini · overlay · fallback | `#141418`/80 % · `#121621`/85 % · `#121621`/78 % · `#09090B`/88 % · `#141418`/97 % | `Color.kt` |
+| Tipografi | 11 tingkat, Plus Jakarta Sans 400–800 | 40/48 → 10/12, tracking −0.03em → +0.06em | `Type.kt` |
+| Bentuk | small · medium · large · extraLarge · pill | 8 · 12 · 16 · 24 dp · 50 % | `Shape.kt` |
+| Spasi | xxs→xxl | 4 · 8 · 12 · 16 · 24 · 32 · 48 dp | `Dimens.kt` |
+| Ukuran | header · nav pil · mini-player · baris · artwork · tombol | 64 · **68** · **56** · 56 · 40/44 · 44/48 dp | `Dimens.kt` |
+| Offset | nav `bottom-5` · mini-player · aman bawah | 20 · **88** · **160** dp | `Dimens.kt` |
+| Blur | header · nav · mini · badge · sheet · overlay | 24 · **30** · **36** · 12 · 4 · 32 dp | `Dimens.kt` |
+| Progress | bar mini-player | 2 dp | `Dimens.kt` |
+
+Font: satu berkas **variable** (`plus_jakarta_sans.ttf`, sumbu `wght`, 176 KB) untuk
+5 berat, lewat `FontVariation.Settings` — butuh API 26+, minSdk proyek 26. Lisensi
+OFL disalin di `app/src/main/assets/licenses/PlusJakartaSans-OFL.txt`.
+
+**Tiga selisih ditemukan saat verifikasi** (dipakai nilai HTML, dicatat di
+`keputusan.md` 2026-11-16): garis pil nav `white/12` (bukan `.6` seperti §6.2) ·
+latar mini-player HTML `rgba(16,15,23,.78)` → dipakai `#121621` Kubu B · blur
+mini-player 36px (bukan 40px seperti tabel §5).
+
+**Bukti Fase 1:** `assembleDebug` hijau · `grep` hex di luar `ui/theme/` = **0** ·
+terpasang di perangkat, `displayHero` tampil sebagai ExtraBold asli (bukan bold
+sintetis) dan `labelXs` memakai accent — screenshot di `.scratch/fase1.png`
+(tidak di-commit).
 
 ---
 
@@ -244,8 +271,8 @@ membaca ulang 17 layar yang sudah ada.
 | Fase | Isi | Status |
 |---|---|---|
 | 0 | Scaffold Gradle M0 | **[x] selesai 2026-11-16** |
-| 1 | Token & tema | [ ] berikutnya |
-| 2 | Kerangka & komponen | [ ] |
+| 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
+| 2 | Kerangka & komponen | [ ] berikutnya |
 | 3 | Tab: #1 #3 #4 #2 | [ ] |
 | 4 | Detail & pemutar: #5 #8 #9 #10 #12 | [ ] |
 | 5 | #14 #16 + penutup MVP | [ ] |
