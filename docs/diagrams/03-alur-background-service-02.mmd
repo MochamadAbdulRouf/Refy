@@ -1,0 +1,19 @@
+sequenceDiagram
+    autonumber
+    participant UC as PlayTrackUseCase
+    participant Ctx as Context
+    participant Svc as MediaSessionService
+    participant Exo as ExoPlayer
+    participant N as NotificationManager
+    participant MS as MediaSession
+
+    UC->>Ctx: ContextCompat.startForegroundService(intent)
+    Ctx->>Svc: onCreate()
+    Svc->>Svc: buat channel "pemutaran" (IMPORTANCE_LOW)
+    Svc->>Exo: build() + setAudioAttributes(musik)
+    Svc->>MS: setSessionActivity(PendingIntent → NowPlaying)
+    Svc->>MS: setCallback(play/pause/next/prev/seek/queue)
+    UC->>Svc: onAddMediaItems / setMediaItems
+    Svc->>Exo: prepare() + play()
+    Svc->>N: startForeground(ID, mediaNotification)
+    Note over Svc,N: Wajib memanggil startForeground ≤ 5 detik setelah startForegroundService, jika tidak → ForegroundServiceDidNotStartInTimeException

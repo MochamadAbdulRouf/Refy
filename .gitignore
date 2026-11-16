@@ -1,0 +1,157 @@
+# ============================================================
+# Refy — .gitignore
+#
+# Prinsip: yang di-commit = dokumen, sumber, skrip, aset kecil.
+# Yang dibuang = hasil build, cache, kredensial, berkas bisa-dibuat-ulang.
+#
+# JANGAN pernah menambahkan baris polos `docs` atau `flows` di sini.
+# Keduanya berisi dokumen inti proyek dan HARUS ikut di-commit.
+# ============================================================
+
+# ---------- Android / Gradle ----------
+.gradle/
+build/
+*/build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.aar
+*.ap_
+*.dex
+*.class
+release/
+output.json
+lint-results*.html
+lint-results*.xml
+
+# ---------- Gradle cache & daemon ----------
+.gradle-cache/
+gradle-app.setting
+.gradletasknamecache
+
+# Sesi Kotlin/Compose (kotlin.session.dir) — dibuat ulang tiap build, bukan sumber.
+.kotlin/
+
+# ---------- Kredensial & lokal — JANGAN PERNAH DI-COMMIT ----------
+local.properties
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+.env
+.env.local
+.env.*.local
+secrets.properties
+google-services.json
+*.pem
+*.p12
+*.key
+# .env.example HARUS ikut: itu dokumentasi variabel, bukan rahasia
+!.env.example
+
+# ---------- IDE ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.vscode/
+!.vscode/extensions.json
+.classpath
+.project
+.settings/
+nbproject/private/
+.fleet/
+
+# ---------- OS ----------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+.directory
+
+# ---------- Log & dump ----------
+*.log
+*.hprof
+hs_err_pid*
+replay_pid*
+crash-*.txt
+stacktrace*.txt
+
+# ---------- Node (mermaid-cli dipakai scripts/) ----------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ---------- Python (dipakai scripts/) ----------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---------- Scratch / sementara ----------
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+.scratch/
+.cache/
+
+# ---------- File besar / arsip ----------
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+
+# ---------- REA: analisis APK EchoMusic (bukti M1) ----------
+# 806 MB (dex + smali + .so + onnx). Ini BUKTI untuk pola bebas-iklannya,
+# bukan aset produksi. Terlalu besar untuk di-commit dan bisa dihasilkan
+# ulang dengan rantai REA. Disimpan lokal saja — lihat keputusan.md 2026-11-12.
+.rea/
+
+# ============================================================
+# Aset desain turunan — bisa ditarik ulang, tidak perlu di-commit
+# ============================================================
+# Snapshot Stitch (HTML + PNG, totalnya beberapa MB) ditarik ulang
+# kapan saja dengan: python scripts/resync-screens.py
+#
+# PENTING — pola harus `.stitch/*`, BUKAN `.stitch` (folder polos).
+# Git tidak mau masuk ke direktori yang diabaikan, jadi negasi di bawahnya
+# (`!.stitch/...`) jadi diam-diam tidak berlaku kalau ditulis `.stitch`.
+# Terbukti 2026-11-12: `git check-ignore -v .stitch/electric-purple/DESIGN.md`
+# tetap rc=0 padahal sudah dinegasi.
+.stitch/*
+.stitch/electric-purple/*
+!.stitch/electric-purple/
+# Manifest teks asli Nocturne Audio — kecil, stabil, dibaca manusia,
+# dan DIKUTIP docs/DESIGN.md sebagai sumber token. Wajib ikut commit.
+!.stitch/electric-purple/DESIGN.md
+
+# Laporan selisih snapshot — kecil, dibaca manusia, dan DIKUTIP oleh
+# docs/DESIGN.md §11 + docs/PRD.md §9 sebagai bukti. Wajib ikut commit.
+!.stitch/DELTA-*.md
+
+# Folder unduhan lama (dibatalkan)
+.stitch/designs/
+
+# Diagram: sumber `.mmd` KECIL (~1 KB/berkas) dan stabil → di-commit.
+# Hasil render `.svg`/`.png` (~200 KB/berkas, ±3,4 MB total) adalah turunan:
+# dibuat ulang dengan scripts/render-diagrams.py → TIDAK di-commit.
+docs/diagrams/*.svg
+docs/diagrams/*.png

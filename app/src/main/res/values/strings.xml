@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bahasa UI: English penuh (D6). Semua teks UI lewat resource, bukan hardcoded. -->
+<resources>
+    <string name="app_name" translatable="false">Refy</string>
+</resources>

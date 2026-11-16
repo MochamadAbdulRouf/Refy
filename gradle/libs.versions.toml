@@ -1,0 +1,67 @@
+# Katalog versi Refy. Satu-satunya tempat versi dependency ditulis.
+# Versi di sini dipilih dari metadata Maven resmi (diperiksa 2026-11-16),
+# bukan dari ingatan. Lihat PLAN.md §6 "Lingkungan mesin".
+#
+# Yang BELUM ditambahkan (menyusul di milestone-nya, jangan tambah tanpa dipakai):
+#   M1 → okhttp, kotlinx-serialization-json, NewPipeExtractor
+#   M2 → androidx.media3 (exoplayer, session)
+#   M4 → androidx.room (runtime, ktx, compiler), androidx.datastore
+
+[versions]
+# AGP 9.x WAJIB untuk Hilt: 2.59 dan 2.60 sama-sama menolak AGP 8.x dengan pesan
+# "only compatible with Android Gradle plugin (AGP) version 9.0.0 or higher".
+# Dibuktikan lewat dua build gagal 2026-11-16 (AGP 8.13.1 + Hilt 2.60.1, lalu 2.59.2).
+# Gradle wrapper: 9.9.1 (9.1 tidak pernah dirilis — unduhan `gradle-9.1-all` di mesin
+# ini ternyata berkas .part yang gagal).
+agp = "9.5.1"
+kotlin = "2.3.20"
+ksp = "2.3.14"
+hilt = "2.60.1"
+composeBom = "2025.06.01"
+# AndroidX di bawah ini SENGAJA tidak memakai versi terbaru. Versi terbaru
+# menuntut compileSdk 36/37 (`minCompileSdk` di aar-metadata), sedangkan D-nya
+# proyek ini mengunci compileSdk 35 (backlog M0). Angka di bawah diverifikasi
+# 2026-11-16 dengan membaca `META-INF/com/android/build/gradle/aar-metadata.properties`
+# dari tiap AAR: core-ktx 1.16.0=35 · activity-compose 1.10.1=35 ·
+# lifecycle 2.9.4=34/35 · navigation-compose 2.9.0=35 · compose ui+foundation
+# 1.8.3=35 · material3 1.3.2=34 · hilt-navigation-compose 1.2.0=34.
+# Naikkan hanya bersama compileSdk, bukan satu-satu.
+coreKtx = "1.16.0"
+lifecycle = "2.9.4"
+activityCompose = "1.10.1"
+navigationCompose = "2.9.0"
+hiltNavigationCompose = "1.2.0"
+junit = "4.13.2"
+androidxTestJunit = "1.2.1"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+# kotlin-android SENGAJA tidak ada di sini: AGP 9 punya built-in Kotlin, dan
+# memasang plugin itu menggagalkan build. Alasan lengkap: app/build.gradle.kts.
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

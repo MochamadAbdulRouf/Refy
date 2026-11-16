@@ -1,0 +1,16 @@
+flowchart TD
+    A[Lagu selesai diputar] --> B{Kebijakan cache?}
+    B -->|Mati - default v0.1| C[Tidak simpan apa pun]
+    B -->|Otomatis - v0.2| D{Cache < batas?}
+    B -->|Simpan manual - v0.2| E[Unduh sekarang + progress bar]
+
+    D -->|Ya| F[Unduh berkas audio]
+    D -->|Tidak| G[Evict LRU sampai ada ruang]
+    G --> F
+    F --> H[Simpan ke filesDir/cache_audio/<br/>+ catatan di DB]
+    H --> I[Tersedia offline]
+
+    I --> J{Pemutaran diminta}
+    J --> K{Cache ada?}
+    K -->|Ya| L[Putar dari berkas lokal<br/>tanpa panggilan jaringan]
+    K -->|Tidak| M[Resolver jaringan seperti biasa]

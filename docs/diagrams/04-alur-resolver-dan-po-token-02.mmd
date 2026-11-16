@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    participant Repo as MusicRepository
+    participant R as StreamResolver
+    participant S1 as InnerTubeStrategy
+    participant S2 as ExtractorStrategy
+    participant S3 as PoTokenStrategy
+    participant C as ProviderCache
+
+    Repo->>C: get("stream:" + trackId)
+    C-->>Repo: null (kedaluwarsa)
+    Repo->>R: resolve(trackId)
+    R->>S1: tryResolve()
+    S1-->>R: gagal (403 / batasan kualitas)
+    R->>S2: tryResolve()
+    S2-->>R: gagal (SignatureException)
+    R->>S3: tryResolve()
+    S3->>S3: ambil token dari penyelesaian WebView / layanan token
+    S3-->>R: StreamInfo(url, expiresAt = now + 6 jam)
+    R-->>Repo: StreamInfo
+    Repo->>C: put(key, StreamInfo)

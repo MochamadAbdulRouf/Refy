@@ -1,0 +1,28 @@
+flowchart LR
+    subgraph Sumber
+        A1[Tap lagu di hasil pencarian]
+        A2[Long-press → Tambah ke antrean]
+        A3[Tap lagu di album/playlist]
+        A4[Dari Riwayat / Favorit]
+    end
+
+    A1 --> Q[QueueRepository]
+    A2 --> Q
+    A3 --> Q
+    A4 --> Q
+
+    Q --> Op1["setQueue list, index"]
+    Q --> Op2[tambahKeAkhir track]
+    Q --> Op3[mainkanBerikutnya track]
+    Q --> Op4[hapus index]
+    Q --> Op5["pindah dari, ke"]
+    Q --> Op6[acak on/off]
+    Q --> Op7[ulangi off/all/one]
+
+    Op1 --> Persist["(Room: queue_items)"]
+    Op2 --> Persist
+    Op3 --> Persist
+    Op4 --> Persist
+    Op5 --> Persist
+    Persist --> Svc[MediaSessionService.setQueue]
+    Svc --> UI[Update S-04 Antrean + mini-player]

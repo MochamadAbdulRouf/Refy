@@ -1,0 +1,50 @@
+graph TB
+    subgraph UI["Lapisan UI (Compose)"]
+        Screens["Screens + ViewModel"]
+        Theme["NocturneTheme<br/>token dari docs/DESIGN.md"]
+        Glass["Komponen kaca<br/>RepaintBoundary + ColoredBox dasar"]
+    end
+
+    subgraph Domain["Lapisan Domain"]
+        UC["UseCase<br/>PlayTrack, SearchSongs, QueueOps"]
+        Model["Model<br/>Track, Album, Artist, StreamInfo"]
+    end
+
+    subgraph Data["Lapisan Data"]
+        RepoMusic["MusicRepository"]
+        RepoLib["LibraryRepository"]
+        RepoQueue["QueueRepository"]
+        Providers["ProviderRegistry"]
+        Local["Room + DataStore"]
+    end
+
+    subgraph Resolver["Provider (modular)"]
+        P1["YtMusicProvider<br/>v0.1 - satu-satunya aktif"]
+        P2["AudiusProvider<br/>v0.4 - ditunda"]
+        P3["LocalProvider<br/>v0.3 - ditunda"]
+    end
+
+    subgraph Platform["Platform Android"]
+        Exo["Media3 ExoPlayer"]
+        MSess["MediaSessionService"]
+        Notif["MediaStyle Notification"]
+    end
+
+    Net["OkHttp + kotlinx.serialization"]
+
+    Screens --> Theme
+    Screens --> Glass
+    Screens --> UC
+    UC --> RepoMusic
+    UC --> RepoLib
+    UC --> RepoQueue
+    RepoMusic --> Providers
+    Providers --> P1
+    Providers -.-> P2
+    Providers -.-> P3
+    P1 --> Net
+    RepoLib --> Local
+    RepoQueue --> Local
+    UC --> Exo
+    Exo --> MSess
+    MSess --> Notif

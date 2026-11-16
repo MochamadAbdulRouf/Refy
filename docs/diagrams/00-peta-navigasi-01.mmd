@@ -1,0 +1,52 @@
+graph TD
+    Splash["Splash / Cek Provider"] --> Home
+
+    Home["#1 Home Screen"] --> Search
+    Home --> AlbumDetail
+    Home --> ArtistProfile
+    Home --> NowPlaying
+    Home --> Queue
+
+    Discover["#3 Library & Search Screen<br/>(tab Discover)"] --> Search
+    Discover --> LibraryTab["#4 Your Library<br/>(tab Library)"]
+    Discover --> CreatePlaylist
+    Search["#2 Active Search Results"] --> AlbumDetail
+    Search --> ArtistProfile
+    Search --> NowPlaying
+
+    LibraryTab --> AlbumDetail
+    LibraryTab --> ArtistProfile
+    LibraryTab --> NowPlaying
+    LibraryTab --> CreatePlaylist
+
+    AlbumDetail["#5 Album Detail & Tracklist"] --> TrackOptions
+    AlbumDetail --> NowPlaying
+    ArtistProfile["#8 Artist Profile"] --> AlbumDetail
+    ArtistProfile --> NowPlaying
+
+    NowPlaying["#9 Now Playing Screen"] --> Queue
+    NowPlaying --> Lyrics
+    NowPlaying --> TrackOptions
+    NowPlaying --> AddToPlaylist
+    Queue["#10 Playback Queue"] --> NowPlaying
+    Queue --> CreatePlaylist
+    TrackOptions["#12 Track Options Sheet"] --> AddToPlaylist
+    TrackOptions --> AlbumDetail
+    TrackOptions --> ArtistProfile
+    Lyrics["#11 Expanded Live Lyrics"] --> NowPlaying
+
+    CreatePlaylist["#14 Create Playlist"] --> LibraryTab
+    AddToPlaylist["#13 Add to Playlist"] --> LibraryTab
+    Profile["#15 User Profile & Audio Settings"] --> NowPlaying
+    Profile --> Settings["#16 Settings"]
+    Settings --> Downloads["#17 Downloads Management"]
+    Downloads --> Settings
+    Settings --> Profile
+
+    Mini["Mini-player (komponen persisten)"] -.->|ketuk| NowPlaying
+    Mini -.->|geser turun| Tutup
+
+    subgraph Selalu Hidup
+        Svc["MediaSessionService"]
+        Mini
+    end

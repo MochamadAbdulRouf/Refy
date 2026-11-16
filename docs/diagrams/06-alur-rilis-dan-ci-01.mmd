@@ -1,0 +1,16 @@
+flowchart TD
+    A[git push ke branch] --> B{Lint + unit test}
+    B -->|Gagal| C[Blokir merge]
+    B -->|Lolos| D{Lint Compose + assembleDebug}
+    D -->|Gagal| C
+    D -->|Lolos| E[Unggah APK debug sebagai artefak<br/>retensi 14 hari]
+
+    F[git tag v0.1.0] --> G[Job rilis]
+    G --> H[assembleRelease<br/>minify + shrinkResources]
+    H --> I{Signing key dari GitHub Secrets?}
+    I -->|Tidak ada| J[Gagal — rilis dibatalkan<br/>tanpa tanda tangan tidak boleh terbit]
+    I -->|Ada| K[Tanda tangani APK + AAB]
+    K --> L[Hasilkan peta R8 untuk pelacakan crash]
+    L --> M[Checksum SHA-256]
+    M --> N[GitHub Release + catatan rilis + APK]
+    N --> O["PR ke fdroiddata<br/>opsional, setelah v0.1.0 stabil"]

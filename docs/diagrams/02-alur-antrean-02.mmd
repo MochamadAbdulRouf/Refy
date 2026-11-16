@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor U as Pengguna
+    participant Q as AntreanScreen
+    participant VM as QueueViewModel
+    participant R as QueueRepository
+    participant DB as Room
+    participant Svc as MediaSessionService
+
+    Note over U,Svc: Kasus: ubah urutan dengan drag
+    U->>Q: drag item #5 ke posisi #2
+    Q->>VM: onMove(from=4, to=1)
+    VM->>R: move(4, 1)
+    R->>DB: transaksi: update posisi semua item terdampak
+    DB-->>R: ok
+    R->>Svc: sinkronMediaSessionQueue()
+    Svc-->>U: antrean di notifikasi ikut berubah
+    R-->>VM: aliran Flow<List<QueueItem>>
+    VM-->>Q: recompose daftar
+
+    Note over U,Svc: Kasus: lagu aktif dihapus
+    U->>Q: swipe-hapus lagu yang sedang diputar
+    Q->>VM: onRemove(activeIndex)
+    VM->>R: remove(index)
+    R->>DB: hapus baris + reindex
+    R->>Svc: playNextOrPrevious()
+    Svc-->>U: lanjut ke lagu berikutnya tanpa jeda

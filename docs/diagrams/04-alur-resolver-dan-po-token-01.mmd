@@ -1,0 +1,23 @@
+flowchart TD
+    A[trackId] --> B{Cache provider_cache masih valid?}
+    B -->|"Ya, expiresAt > now"| C[Pakai StreamInfo cache]
+    B -->|Tidak| D[Pilih strategi resolver]
+
+    D --> E{Strategi 1: InnerTube langsung berhasil?}
+    E -->|Ya| F[StreamInfo + expiresAt]
+    E -->|Tidak| G{Strategi 2: NewPipeExtractor berhasil?}
+    G -->|Ya| F
+    G -->|Tidak| H{Strategi 3: PO token tersedia?}
+    H -->|Ya| I[Kirim permintaan dengan token]
+    I --> J{Berhasil?}
+    J -->|Ya| F
+    J -->|Tidak| K[ProviderBrokenException]
+    H -->|Tidak| K
+
+    F --> L[Simpan ke provider_cache]
+    L --> M[ExoPlayer]
+
+    K --> N[Log lokal + hitung kegagalan]
+    N --> O{Kegagalan ≥ 3 dalam 10 menit?}
+    O -->|Ya| P["Tampilkan banner:<br/>'Sumber sedang bermasalah'<br/>+ tautan laporkan isu"]
+    O -->|Tidak| Q["Lewati lagu, lanjut antrean"]

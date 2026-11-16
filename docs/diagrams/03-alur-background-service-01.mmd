@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> TidakAda: app dibuka, belum ada lagu
+    TidakAda --> Aktif: play(track) → startForegroundService
+    Aktif --> Aktif: putar/jeda/next/prev (service tetap hidup)
+    Aktif --> Aktif: app di-swipe dari recents (tetap hidup)
+    Aktif --> BerhentiSementara: audio focus hilang (telepon)
+    BerhentiSementara --> Aktif: fokus kembali
+    Aktif --> HentiDiri: jeda > 15 menit tanpa interaksi
+    HentiDiri --> TidakAda: stopSelf()
+    Aktif --> TidakAda: pengguna tekan tutup di notifikasi

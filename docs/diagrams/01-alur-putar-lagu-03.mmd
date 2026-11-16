@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Menyiapkan: play(track)
+    Menyiapkan --> Memutar: player ready
+    Menyiapkan --> Gagal: resolve/prepare gagal
+    Memutar --> Jeda: pause / audio focus hilang
+    Jeda --> Memutar: play / audio focus kembali
+    Memutar --> Buffering: jaringan lambat
+    Buffering --> Memutar: buffer cukup
+    Buffering --> Gagal: timeout 30s
+    Memutar --> Selesai: track selesai
+    Selesai --> Menyiapkan: autoplay berikutnya
+    Gagal --> Idle: lewati / berhenti

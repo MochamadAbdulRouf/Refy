@@ -1,0 +1,7 @@
+flowchart LR
+    A[Cron mingguan<br/>GitHub Actions] --> B[Jalankan skrip health-check]
+    B --> C[10 trackId tetap → minta StreamInfo]
+    C --> D{Bitrate ≥ ambang &<br/>≥ 8 dari 10 berhasil?}
+    D -->|Ya| E["Catat hasil, selesai"]
+    D -->|Tidak| F["Buka/renew isu otomatis<br/>label: resolver-break"]
+    F --> G[Notifikasi pemilik repo]

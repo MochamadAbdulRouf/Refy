@@ -1,0 +1,17 @@
+flowchart TD
+    A[Aksi masuk ke MediaSession] --> B{Jenis aksi}
+    B -->|play / pause / toggle| C[Exo.play/pause]
+    B -->|next / previous| D[QueueRepository.next/prev → resolve → setMediaItem]
+    B -->|seekTo| E[Exo.seekTo]
+    B -->|stop| F["Simpan posisi, stopSelf"]
+    B -->|setMediaItems dari Android Auto| G[Ganti antrean penuh]
+
+    C --> H{Pemutaran berubah dari jeda ke jalan?}
+    H -->|Ya| I[Dapatkan audio focus]
+    H -->|Tidak| J[Update notifikasi]
+
+    K[Headphone dicabut / AudioDeviceCallback] --> L[Pause + tampilkan notifikasi resumable]
+    M[Telepon masuk - AUDIOFOCUS_LOSS_TRANSIENT] --> N["Pause, ingat status"]
+    N --> O{Audio focus kembali dalam 15 menit?}
+    O -->|Ya| P[Resume]
+    O -->|Tidak| Q["Tetap jeda, simpan posisi"]

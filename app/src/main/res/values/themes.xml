@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Tema XML minimal. Tema sebenarnya ada di Compose (NocturneTheme, Fase 1).
+      Tema ini hanya mengatur latar jendela supaya tidak ada kedipan putih saat
+      aplikasi dibuka — aplikasi ini dark-only (D12).
+    -->
+    <style name="Theme.Refy" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/refy_canvas</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

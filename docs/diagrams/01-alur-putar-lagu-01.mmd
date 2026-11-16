@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    actor U as Pengguna
+    participant UI as CariScreen
+    participant VM as SearchViewModel
+    participant UC as PlayTrackUseCase
+    participant Repo as MusicRepository
+    participant P as YtMusicProvider
+    participant Svc as MediaSessionService
+    participant Exo as ExoPlayer
+
+    U->>UI: ketik "tulus monokrom" + enter
+    UI->>VM: onQuerySubmit(q)
+    VM->>Repo: search(q, SONGS)
+    Repo->>P: search(q, SONGS)
+    P-->>Repo: List<Track>
+    Repo-->>VM: List<Track>
+    VM-->>UI: state = Success(list)   [≤ 2 dtk]
+    U->>UI: tap lagu
+    UI->>UC: play(track, queue = hasilPencarian)
+    UC->>Repo: getStreamInfo(track.id)
+    Repo->>P: getStreamInfo(track.id)
+    P-->>Repo: StreamInfo(url, mime, bitrate, expiresAt)
+    Repo-->>UC: StreamInfo
+    UC->>Svc: setQueue(tracks, index)
+    UC->>Exo: setMediaItem(url) + prepare()
+    Exo-->>U: audio berbunyi   [≤ 2 dtk dari tap]
+    Svc->>Svc: publish MediaStyle notification
+    UI-->>U: mini-player tampil

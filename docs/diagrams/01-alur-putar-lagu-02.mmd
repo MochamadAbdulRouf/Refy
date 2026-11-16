@@ -1,0 +1,17 @@
+flowchart TD
+    A[Pengguna tap lagu] --> B{StreamInfo ter-cache & belum kedaluwarsa?}
+    B -->|Ya| F[Pakai URL cache]
+    B -->|Tidak| C[Minta StreamInfo ke provider]
+    C --> D{Berhasil?}
+    D -->|Ya| E[Simpan di cache dengan expiresAt]
+    E --> F
+    D -->|Tidak, jaringan| G[Status ERROR_JARINGAN]
+    D -->|Tidak, provider rusak| H[Status ERROR_PROVIDER]
+    F --> I[ExoPlayer.setMediaItem + prepare]
+    I --> J{Player siap?}
+    J -->|Ya| K[Play + update mini-player + notifikasi]
+    J -->|Tidak, format tidak didukung| L["Turunkan kualitas, coba sekali lagi"]
+    L --> J2{Gagal lagi?}
+    J2 -->|Ya| M["Lewati lagu, tampilkan toast sekali"]
+    G --> N["Tombol Coba lagi, antrean tetap utuh"]
+    H --> O[Lewati lagu + banner 'Sumber sedang bermasalah']

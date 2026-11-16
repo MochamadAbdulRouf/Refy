@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Token warna untuk lapisan XML (window background). Nilainya dari Kubu B (D8):
+  docs/DESIGN.md §1. Token Compose dibuat di Fase 1 — ui/theme/Color.kt.
+  Setelah itu, nilainya harus sama; jangan biarkan dua tabel warna berbeda.
+-->
+<resources>
+    <color name="refy_canvas">#FF09090B</color>
+</resources>

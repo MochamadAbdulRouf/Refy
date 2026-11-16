@@ -1,0 +1,6 @@
+flowchart LR
+    A[Permintaan putar] --> B{Berkas lokal ada?}
+    B -->|Ya| C["Putar lokal - hemat data, offline OK"]
+    B -->|Tidak| D{StreamInfo cache valid?}
+    D -->|Ya| E[Putar dari URL]
+    D -->|Tidak| F[Resolver ulang]
