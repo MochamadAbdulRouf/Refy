@@ -23,5 +23,16 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       # Runner ubuntu GitHub sudah membawa Android SDK; tidak perlu sdkmanager manual.
+      #
+      # MEMORI DIGANTI DI SINI, dan itu disengaja. `gradle.properties` di repo
+      # disetel untuk mesin pengembang yang RAM-nya cuma 7,4 GB (-Xmx1280m,
+      # MaxMetaspaceSize 384m). Nilai itu terlalu kecil untuk lint: run #2 gagal
+      # dengan "Can't initialize detector com.android.tools.lint.checks.
+      # InferredThreadDetector" setelah Gradle memperingatkan metaspace habis.
+      # Runner punya RAM jauh lebih besar, jadi di sini dinaikkan lewat -D
+      # (menang atas gradle.properties).
       - name: lint + unit test + assembleDebug
-        run: ./gradlew --no-daemon lintDebug testDebugUnitTest assembleDebug
+        run: >-
+          ./gradlew --no-daemon
+          -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -XX:ReservedCodeCacheSize=256m -Dfile.encoding=UTF-8"
+          lintDebug testDebugUnitTest assembleDebug
