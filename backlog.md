@@ -189,9 +189,9 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 > dibuat dengan rancangan sendiri (sheet: daftar playlist + "New playlist").
 
 - [x] #1 Home Screen (sapaan, chip All/Music/Podcasts, Daily Mix, Made For You, Trending Now) — **UI selesai 2026-11-18** (`ui/home/`), data contoh `sample_*` sampai M1/M4. Chip hanya All/Music (inventaris i18n tak punya kunci podcast); bel/cast/equalizer/avatar tidak dirender (D15). Rincian `PLAN.md` §5
-- [ ] #2 Active Search Results (Top Result, chip Top/Songs/Albums/Artists/Playlists, Songs, Albums)
+- [x] #2 Active Search Results (Top Result, chip Top/Songs/Albums/Artists/Playlists, Songs, Albums) — **UI selesai 2026-11-18** (`ui/search/`, route `search`), kueri diterima dari luar; avatar & chip Podcasts tidak dirender (D15). Rincian `PLAN.md` §5
 - [x] #3 Library & Search Screen (tab Discover: Browse all, chip genre, Recently played) — **UI selesai 2026-11-18** (`ui/discover/`), data contoh `sample_*`. Ikon mic/kamera & "Explore tags" tidak dirender (D15); judul memakai `discover.title`, bukan `<h1>` desain
-- [ ] #4 Your Library (tab Library: Playlists, Podcasts, Albums, Artists, Downloaded)
+- [x] #4 Your Library (tab Library: Playlists, Albums, Artists; Podcasts & Downloaded ditunda D15) — **UI selesai 2026-11-18** (`ui/library/`), data contoh `sample_*`; tombol "+" menyambung ke #14 di Fase 5. Rincian `PLAN.md` §5
 - [ ] #5 Album Detail & Tracklist (`album-detail-tracklist-76a16cec`)
 - [ ] #8 Artist Profile
 - [ ] #9 Now Playing Screen

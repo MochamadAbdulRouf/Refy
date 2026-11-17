@@ -38,6 +38,7 @@ fun MediaRow(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     seed: Int = 0,
+    trailingText: String? = null,
     onClick: (() -> Unit)? = null,
     onMoreOptions: (() -> Unit)? = null,
 ) {
@@ -69,6 +70,15 @@ fun MediaRow(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
+        }
+
+        if (trailingText != null) {
+            Text(
+                text = trailingText,
+                style = RefyType.bodySm,
+                color = RefyColors.TextMuted,
+                maxLines = 1,
+            )
         }
 
         if (onMoreOptions != null) {

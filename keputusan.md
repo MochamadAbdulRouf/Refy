@@ -604,3 +604,26 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 
 **Verifikasi:** `assembleDebug` hijau · terpasang · Home & Discover tampil sesuai struktur PNG · tab berpindah · gate dokumen HIJAU · nol hex di luar `ui/theme/`.
 **Belum:** #4 Your Library, #2 Active Search Results.
+
+## 2026-11-18 — Fase 3 selesai: #4 Your Library & #2 Active Search Results
+
+**Konteks:** dua layar terakhir Fase 3. Keduanya masih memakai data contoh `sample_*` (kebijakan sebelumnya tetap berlaku), tanpa resolver (M1) maupun Room (M4).
+
+**1. #2 jadi route `search`, bukan tab kelima**
+- `NavHost` punya route `search` terpisah dari 4 tab; dibuka dari kolom cari Discover dan Library, ditutup lewat `Cancel` (`popBackStack`).
+- Tab yang menyala saat route `search` aktif adalah **Discover**, karena pintu masuk utamanya di sana. `RefyDestination` tetap 4 entri — desain juga hanya punya 4 tab.
+- **Alternatif ditolak:** (a) *tab kelima bernama Search* — melanggar D11 dan PNG kanon; (b) *dialog overlay di atas Discover* — menyembunyikan bottom nav yang di desain tetap terlihat.
+
+**2. Tiga koreksi setelah membandingkan render dengan PNG kanon**
+- #2: judul "Search" di atas kolom cari **dihapus** — PNG `active-search-results-13c3c6cd` langsung dibuka kolom cari.
+- #2: badge "Playlist • Editorial" diubah dari teks polos menjadi **pil** (latar `OnAccent` 18 %, radius penuh) sesuai PNG.
+- #4: data contoh disamakan urutannya dengan PNG — "Late Night Drives" (bukan "Late Night Drive") dan baris **Deep Focus Techno** ditambahkan; tanpa itu daftar tampak lebih pendek dari desain.
+
+**3. Yang tetap tidak dirender (D15/D14, dicatat per layar di `PLAN.md` §5)**
+- #4: avatar kanan atas, chip `Podcasts`/`Downloaded`, ikon urutkan & grid, chevron di header "Recently Played". Tombol "+" dirender dan aktif secara visual karena membuat playlist adalah F-15 (MUST), tetapi aksinya `{}` sampai #14 dibangun di Fase 5.
+- #2: avatar kanan atas; kueri belum bisa diketik di layar ini — input sebenarnya butuh resolver M1.
+
+**4. Jebakan alat yang terulang (catatan kerja)**
+- Screenshot pertama salah layar karena aplikasi sudah di latar belakang dan tap membuka aplikasi lain (WhatsApp). Pola yang dipakai: `monkey -p <pkg> -c android.intent.category.LAUNCHER 1` → `dumpsys window | grep mCurrentFocus` → baru tap. Jangan percaya screenshot tanpa memeriksa isinya.
+
+**Verifikasi:** `assembleDebug` hijau · APK terpasang · #4 dan #2 dicocokkan dengan PNG kanon lewat screenshot (`.scratch/fase3-library.png`, `.scratch/fase3-search.png`) · tab Discover tetap menyala di route `search`.

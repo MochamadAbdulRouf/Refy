@@ -53,6 +53,33 @@
     <string name="common_more_options">More options</string>
 
     <!-- ============================================================
+         LIBRARY (#4) — kunci mengikuti docs/I18N-KEYS.md §library.
+         ============================================================ -->
+    <string name="library_title">Your Library</string>
+    <string name="library_recently_played">Recently Played</string>
+    <string name="library_liked_songs">Liked Songs</string>
+    <string name="library_empty">Your library is empty</string>
+    <string name="library_cd_add">Create playlist</string>
+
+    <!-- ============================================================
+         SEARCH (#2) — kunci mengikuti docs/I18N-KEYS.md §search.
+         ============================================================ -->
+    <string name="search_chip_top">Top</string>
+    <string name="search_chip_songs">Songs</string>
+    <string name="search_chip_albums">Albums</string>
+    <string name="search_chip_artists">Artists</string>
+    <string name="search_chip_playlists">Playlists</string>
+    <string name="search_top_result">Top Result</string>
+    <string name="search_section_songs">Songs</string>
+    <string name="search_section_albums">Albums</string>
+    <string name="search_result_saves">Over %1$s saves • By %2$s</string>
+    <string name="common_see_all">See all</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_clear">Clear</string>
+    <string name="common_search">Search</string>
+    <string name="common_play_playlist">Play playlist</string>
+
+    <!-- ============================================================
          SEMENTARA — data contoh Home. Belum ada resolver (M1), jadi kartu
          memakai judul statis ini. Semua kunci berawalan `sample_` DIBUANG
          saat data asli masuk; jangan dipakai layar lain.
@@ -79,4 +106,32 @@
     <string name="sample_playlist_synthwave" translatable="false">Synthwave Essentials</string>
     <string name="sample_playlist_editorial" translatable="false">Playlist • Nocturne Editorial</string>
     <string name="sample_playlist_songs" translatable="false">Playlist • 142 songs</string>
+    <string name="sample_liked_songs_subtitle" translatable="false">Playlist • 342 songs</string>
+    <string name="sample_new_episodes" translatable="false">New Episodes</string>
+    <string name="sample_new_episodes_subtitle" translatable="false">Updated 2h ago • 14 episodes</string>
+    <string name="sample_late_night_subtitle" translatable="false">Playlist • Curated by You • 48 songs</string>
+    <string name="sample_smart_radio" translatable="false">Gunship &amp; Kavinsky Mix</string>
+    <string name="sample_smart_radio_subtitle" translatable="false">Smart Radio • Updated yesterday</string>
+    <string name="sample_artist_the_midnight" translatable="false">The Midnight</string>
+    <string name="sample_artist_subtitle" translatable="false">Artist • 2.4M monthly listeners</string>
+    <string name="sample_album_random_access" translatable="false">Random Access Memories</string>
+    <string name="sample_album_subtitle" translatable="false">Album • Daft Punk • 2013</string>
+    <string name="sample_query" translatable="false">Synthwave</string>
+    <string name="sample_search_badge" translatable="false">Playlist • Editorial</string>
+    <string name="sample_search_saves" translatable="false">1.8M</string>
+    <string name="sample_search_by" translatable="false">Nocturne</string>
+    <string name="sample_song_resonance" translatable="false">Resonance</string>
+    <string name="sample_song_nightcall" translatable="false">Nightcall</string>
+    <string name="sample_song_sunset" translatable="false">Sunset</string>
+    <string name="sample_song_tech_noir" translatable="false">Tech Noir</string>
+    <string name="sample_artist_home" translatable="false">HOME</string>
+    <string name="sample_artist_kavinsky" translatable="false">Kavinsky</string>
+    <string name="sample_artist_gun" translatable="false">Gunship</string>
+    <string name="sample_album_endless_summer" translatable="false">Endless Summer</string>
+    <string name="sample_album_endless_subtitle" translatable="false">The Midnight • 2016</string>
+    <string name="sample_album_outrun" translatable="false">OutRun</string>
+    <string name="sample_album_outrun_subtitle" translatable="false">Kavinsky • 2013</string>
+    <string name="sample_late_night_drives" translatable="false">Late Night Drives</string>
+    <string name="sample_deep_focus" translatable="false">Deep Focus Techno</string>
+    <string name="sample_deep_focus_subtitle" translatable="false">Downloaded • 94 songs • Offline ready</string>
 </resources>

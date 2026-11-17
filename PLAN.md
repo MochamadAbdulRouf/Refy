@@ -265,9 +265,27 @@ Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
 - **Catatan ukuran:** judul bagian diperbaiki dari `headlineSm` 18 → `headlineMd` 22 dan subjudul dari `bodySm` 12 → `bodyMd` 14 setelah membandingkan hasil render dengan PNG. (`docs/DESIGN.md` §2 sendiri menyebut `headline-md` = judul bagian.)
 - **Data:** `sample_*`.
 
-### #4 Your Library & #2 Active Search Results
+### #4 Your Library (tab Library) — 2026-11-18
 
-*Belum dikerjakan.*
+- **Berkas:** `ui/library/LibraryScreen.kt` (stateless) + `LibraryUiState.kt`.
+- **Susunan dari PNG kanon `your-library-be4f34bd`:** judul "Your Library" + tombol cari/tambah bulat → chip Playlists/Albums/Artists → "Recently Played" → dua kartu pinned 72dp (Liked Songs, New Episodes) dengan titik accent → daftar baris 5 kategori.
+- **Token dipakai:** `headlineLgMobile` untuk judul, `headlineSm` untuk judul kartu pinned, `bodySm` untuk subjudul, `iconButton` untuk tombol bulat, `Surface` untuk latar kartu pinned.
+- **Kunci i18n:** `library.title`, `library.recently_played`, `library.liked_songs`, `library.empty`, `library.cd_add`, `common.search`, `discover.filter_*`.
+- **Penyimpangan (D15/D14):** avatar kanan atas tidak dirender (v0.1 tanpa login) · chip `Podcasts` dan `Downloaded` tidak dirender · ikon urutkan & grid + chevron di header "Recently Played" tidak dirender (belum ada perilaku) · tombol "+" aktif tetapi aksinya `{}` sampai layar #14 (Fase 5) · data `sample_*`, termasuk "Late Night Drives" dan "Deep Focus Techno" supaya urutan baris sama dengan desain.
+
+### #2 Active Search Results — 2026-11-18
+
+- **Berkas:** `ui/search/SearchResultsScreen.kt` (stateless) + `SearchUiState.kt`; route terpisah `search` di `RefyRoot`, dibuka dari kolom cari Discover/Library, tab Discover tetap menyala.
+- **Susunan dari PNG kanon `active-search-results-13c3c6cd`:** kolom cari terisi + `Cancel` → chip Top/Songs/Albums/Artists/Playlists → "Top Result" (kartu gradien accent, badge pil, tombol putar) → "Songs" (baris + durasi) → "Albums" (grid 2 kolom).
+- **Token dipakai:** `headlineSm` untuk judul bagian, gradien `Accent → AccentDeep` untuk kartu Top Result, `primaryButton` 48dp untuk tombol putar kartu.
+- **Kunci i18n:** `search.top_result`, `search.section_songs/albums`, `search.chip_*`, `search.result_saves`, `search.hint`, `common.see_all`, `common.cancel`, `common.play_playlist`.
+- **Penyimpangan (D15):** avatar kanan atas tidak dirender · kueri belum bisa diketik di layar ini (menerima kueri dari luar; input sebenarnya butuh resolver M1) · artwork gradien, bukan foto.
+- **Koreksi setelah banding dengan PNG:** judul "Search" di atas kolom cari dihapus (desain tidak punya) dan badge kartu Top Result dijadikan pil, bukan teks polos.
+
+### Fase 3 — catatan hasil (2026-11-18)
+
+- Layar #1, #3, #4, #2 terpasang dan dicocokkan dengan PNG kanon lewat screenshot `.scratch/fase3-*.png` (tidak di-commit).
+- `common_coming_soon` kini hanya dipakai placeholder tab Create sampai Fase 5.
 
 ---
 
@@ -291,7 +309,7 @@ membaca ulang 17 layar yang sudah ada.
 | 0 | Scaffold Gradle M0 | **[x] selesai 2026-11-16** |
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
 | 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
-| 3 | Tab: #1 #3 #4 #2 | [~] **2 dari 4** — #1 Home & #3 Discover selesai 2026-11-18; #4 Library & #2 Search berikutnya |
+| 3 | Tab: #1 #3 #4 #2 | **[x] selesai 2026-11-18** — 4 layar terpasang & dicocokkan dengan PNG kanon |
 | 4 | Detail & pemutar: #5 #8 #9 #10 #12 | [ ] |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |

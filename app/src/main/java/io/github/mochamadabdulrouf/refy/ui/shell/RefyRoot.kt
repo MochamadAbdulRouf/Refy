@@ -28,6 +28,10 @@ import io.github.mochamadabdulrouf.refy.ui.discover.DiscoverScreen
 import io.github.mochamadabdulrouf.refy.ui.discover.sampleDiscoverUiState
 import io.github.mochamadabdulrouf.refy.ui.home.HomeScreen
 import io.github.mochamadabdulrouf.refy.ui.home.sampleHomeUiState
+import io.github.mochamadabdulrouf.refy.ui.library.LibraryScreen
+import io.github.mochamadabdulrouf.refy.ui.library.sampleLibraryUiState
+import io.github.mochamadabdulrouf.refy.ui.search.SearchResultsScreen
+import io.github.mochamadabdulrouf.refy.ui.search.sampleSearchUiState
 import io.github.mochamadabdulrouf.refy.ui.theme.NocturneTheme
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyColors
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyDimens
@@ -84,8 +88,9 @@ fun ScaffoldShell(
 /**
  * Akar navigasi: 4 tab, masing-masing satu route.
  *
- * Isi tab masih [PlaceholderScreen] — Fase 3 mengisinya satu per satu
- * (#1 Home → #3 Discover → #4 Library → #2 Search).
+ * Isi tab: #1 Home, #3 Discover, #4 Your Library sudah nyata (data contoh);
+ * #2 Active Search Results adalah route terpisah (`search`) yang dibuka dari
+ * kolom cari Discover/Library, bukan tab kelima.
  */
 @Composable
 fun RefyRoot(modifier: Modifier = Modifier) {
@@ -93,7 +98,7 @@ fun RefyRoot(modifier: Modifier = Modifier) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val selected = RefyDestination.entries.firstOrNull { it.route == currentRoute }
-        ?: RefyDestination.Home
+        ?: if (currentRoute == SEARCH_ROUTE) RefyDestination.Discover else RefyDestination.Home
 
     ScaffoldShell(
         selected = selected,
@@ -113,18 +118,38 @@ fun RefyRoot(modifier: Modifier = Modifier) {
             navController = navController,
             startDestination = RefyDestination.Home.route,
         ) {
-            RefyDestination.entries.forEach { destination ->
-                composable(destination.route) {
-                    when (destination) {
-                        RefyDestination.Home -> HomeScreen(state = sampleHomeUiState())
-                        RefyDestination.Discover -> DiscoverScreen(state = sampleDiscoverUiState())
-                        else -> PlaceholderScreen(destination)
-                    }
-                }
+            composable(RefyDestination.Home.route) {
+                HomeScreen(state = sampleHomeUiState())
+            }
+            composable(RefyDestination.Discover.route) {
+                DiscoverScreen(
+                    state = sampleDiscoverUiState(),
+                    onSearchClick = { navController.navigate(SEARCH_ROUTE) { launchSingleTop = true } },
+                )
+            }
+            composable(RefyDestination.Library.route) {
+                LibraryScreen(
+                    state = sampleLibraryUiState(),
+                    onSearchClick = { navController.navigate(SEARCH_ROUTE) { launchSingleTop = true } },
+                    onCreatePlaylist = {},
+                )
+            }
+            composable(RefyDestination.Create.route) {
+                PlaceholderScreen(RefyDestination.Create)
+            }
+            composable(SEARCH_ROUTE) {
+                SearchResultsScreen(
+                    state = sampleSearchUiState(),
+                    onCancel = { navController.popBackStack() },
+                    onClear = {},
+                )
             }
         }
     }
 }
+
+/** Bukan tab: #2 dibuka dari kolom cari, jadi identitasnya route biasa. */
+private const val SEARCH_ROUTE = "search"
 
 @Composable
 private fun PlaceholderScreen(destination: RefyDestination) {
