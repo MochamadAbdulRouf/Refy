@@ -24,6 +24,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.mochamadabdulrouf.refy.R
 import io.github.mochamadabdulrouf.refy.ui.component.BottomNavPill
+import io.github.mochamadabdulrouf.refy.ui.discover.DiscoverScreen
+import io.github.mochamadabdulrouf.refy.ui.discover.sampleDiscoverUiState
+import io.github.mochamadabdulrouf.refy.ui.home.HomeScreen
+import io.github.mochamadabdulrouf.refy.ui.home.sampleHomeUiState
 import io.github.mochamadabdulrouf.refy.ui.theme.NocturneTheme
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyColors
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyDimens
@@ -111,7 +115,11 @@ fun RefyRoot(modifier: Modifier = Modifier) {
         ) {
             RefyDestination.entries.forEach { destination ->
                 composable(destination.route) {
-                    PlaceholderScreen(destination)
+                    when (destination) {
+                        RefyDestination.Home -> HomeScreen(state = sampleHomeUiState())
+                        RefyDestination.Discover -> DiscoverScreen(state = sampleDiscoverUiState())
+                        else -> PlaceholderScreen(destination)
+                    }
                 }
             }
         }

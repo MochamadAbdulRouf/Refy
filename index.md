@@ -5,7 +5,7 @@
 **Sumber musik v0.1:** katalog YouTube Music via extractor komunitas
 **Lisensi rencana:** GPL-3.0-or-later
 **Repositori:** `D:\Coding\Refy`
-**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0–2 selesai**: scaffold Gradle, tema `NocturneTheme`, dan kerangka UI (pil nav 4 tab + `MiniPlayer` + `ScaffoldShell`) terpasang di perangkat; CI run #3 hijau. Berikutnya Fase 3 (#1 Home → #3 Discover → #4 Library → #2 Search) — urutan di `PLAN.md`
+**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0–2 selesai**; **Fase 3 berjalan (2 dari 4 layar)**: #1 Home & #3 Discover tampil dengan data contoh, terpasang di perangkat. Berikutnya #4 Your Library → #2 Active Search Results — urutan di `PLAN.md`
 **Desain:** Stitch project **Electric Purple Music App** (`projects/9190295645942987043`), design system **Nocturne Audio** (`assets/9feaa5b53730417e8c1d163ffc007c63`), **18 layar UI + 2 aset** (17 layar nyata + 1 artefak)
 **Perhatian:** palet **sudah dikunci** — Kubu B (D8). Bottom nav **pil mengambang** (D11). Lihat `docs/DESIGN.md` §1 (remap) dan §6.2 (nav).
 

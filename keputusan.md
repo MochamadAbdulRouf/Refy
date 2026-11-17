@@ -578,3 +578,29 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 - Membangunnya sekarang = menebak, lalu mengukur ulang di Fase 3. PLAN diperbarui: komponen ini dibuat just-in-time saat layar pertama membutuhkannya.
 
 **Verifikasi Fase 2:** `assembleDebug` + `lintDebug` hijau · APK terpasang, 4 tab berpindah (screenshot perangkat) · gate dokumen HIJAU · nol hex di luar `ui/theme/` · mini-player **belum tampil di aplikasi** (belum ada pemutar, M2) dan baru terbukti lewat `@Preview`.
+---
+## 2026-11-18 — Fase 3 (sebagian): #1 Home & #3 Discover, dan kebijakan data contoh
+**Konteks:** dua layar pertama Fase 3. Belum ada resolver (M1) maupun Room (M4), jadi layar tidak punya data nyata.
+
+**1. Data contoh lewat resource `sample_*`, bukan teks di Kotlin, dan bukan data palsu yang tampak nyata**
+- Layar menerima `UiState` biasa (`HomeUiState`, `DiscoverUiState`); pemanggil mengisinya dengan `sample*UiState()`.
+- Judul kartu diambil dari resource `sample_*` (ditandai `translatable="false"`, semua berawalan `sample_`): mudah dicari dan dihapus saat M1/M4 masuk.
+- **Yang sengaja TIDAK dikarang:** jumlah pemutaran, durasi, waktu, angka "142 songs" diperlakukan sebagai teks contoh yang jelas (`Playlist • 142 songs` di resource sample), bukan dihitung dari data yang tidak ada.
+- **Alternatif ditolak:** (a) *layar kosong dengan "Coming soon"* — UI tidak bisa dibandingkan dengan desain, padahal itu inti Fase 3; (b) *hardcode judul di Composable* — melanggar aturan i18n dan menyulitkan pembersihan.
+
+**2. Fitur desain yang belum ada di v0.1 tidak dirender (D15) — daftar konkret**
+- Home: bel notifikasi, tombol cast, tombol pengatur suara, avatar profil, chip Podcasts/Audiobooks/Live. Chip yang dirender hanya `All` dan `Music` karena hanya dua itu yang punya kunci di `docs/I18N-KEYS.md`.
+- Discover: ikon mikrofon & kamera di kolom cari, aksi "Explore tags", chip `Downloaded` dan `Podcasts`, ikon urutkan/tampilan-grid di header "Recently played".
+- **Akibat yang jujur:** dua layar ini **tidak** identik dengan PNG desain. Selisihnya sengaja, bukan kelalaian — dan dicatat per layar di `PLAN.md` §5.
+
+**3. Dua koreksi ukuran setelah membandingkan render dengan PNG**
+- Judul bagian: `headlineSm` (18/600) → **`headlineMd` (22/600)**; subjudul: `bodySm` (12/400) → **`bodyMd` (14/400)**. `docs/DESIGN.md` §2 sendiri menyebut `headline-md` untuk "judul bagian (home, album)". Render pertama terlalu kecil dibanding PNG.
+
+**4. Dua jebakan Compose yang ditemukan (biar tidak terulang)**
+- `@Composable` **tidak boleh** dipanggil di dalam lambda `remember { mutableStateOf(...) }` — error `@Composable invocations can only happen from the context of a @Composable function`. Pola benar: hitung state contoh di badan Composable, simpan pilihan di `remember`.
+- `Icons.Filled.SwapVert` **tidak ada** di `material-icons-core` (hanya di extended) — sempat dipakai untuk ikon urutkan, diganti dengan tidak merender ikon (D15).
+
+**5. Catatan perangkat uji:** `adb devices` menampilkan perangkat yang sama dua kali (sambungan wireless ganda). `adb -s "<serial dengan (2)>"` gagal; yang bekerja `adb -t <transport_id>`.
+
+**Verifikasi:** `assembleDebug` hijau · terpasang · Home & Discover tampil sesuai struktur PNG · tab berpindah · gate dokumen HIJAU · nol hex di luar `ui/theme/`.
+**Belum:** #4 Your Library, #2 Active Search Results.

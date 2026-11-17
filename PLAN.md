@@ -246,10 +246,28 @@ sintetis) dan `labelXs` memakai accent — screenshot di `.scratch/fase1.png`
 
 ## 5. Catatan per layar (diisi setelah tiap layar selesai)
 
-Satu baris per layar: tanggal · ukuran yang dipakai · token khusus · kunci i18n ·
-penyimpangan dari desain + alasan.
+Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
 
-*Belum ada.*
+### #1 Home Screen — 2026-11-18
+
+- **Berkas:** `ui/home/HomeScreen.kt` (stateless) + `HomeUiState.kt` (state + `greetingResFor`).
+- **Susunan dari PNG kanon:** sapaan besar → chip → grid Daily Mix 2 kolom → "Made For You" (karusel 144dp + "Show all") → "Trending Now" (grid 2 kolom + badge).
+- **Token dipakai:** `headlineLgMobile` 26/700 untuk sapaan, `headlineMd` 22/600 untuk judul bagian, `bodyMd` 14/400 untuk subjudul, `labelLg` untuk judul tile, `labelXs` untuk badge. Kartu 144dp, grid dua kolom, tinggi tile Daily Mix 56+padding.
+- **Kunci i18n:** `home.greeting_morning/afternoon/evening` (D14: tanpa nama), `home.filter_all`, `home.filter_music`, `home.section_*`, `home.subtitle_*`, `home.explore`, `common.show_all`.
+- **Penyimpangan (semua karena D15 atau inventaris i18n):** ikon bel/cast/pengatur-suara/avatar tidak dirender · chip hanya `All` + `Music` (inventaris tak punya kunci podcast/audiobook/live) · artwork memakai gradien token, bukan foto (belum ada sumber gambar).
+- **Data:** `sample_*` — dibuang saat M1/M4.
+
+### #3 Library & Search Screen (tab Discover) — 2026-11-18
+
+- **Berkas:** `ui/discover/DiscoverScreen.kt` + `DiscoverUiState.kt`; komponen baru `SearchField`, `MediaRow`, `GenreCard` (di dalam layar).
+- **Susunan:** judul → kolom cari → "Browse all" (grid genre 2 kolom, rasio 1.45) → chip (Playlists/Artists/Albums) → "Recently played" (daftar baris).
+- **Penyimpangan:** judul memakai `discover.title` ("Discover"), bukan `<h1>` desain (cacat #2 di inventaris) · ikon mic/kamera & aksi "Explore tags" tidak dirender (D15) · chip `Downloaded`/`Podcasts` tidak dirender (D15) · ikon urutkan/grid di header "Recently played" tidak dirender (belum ada perilaku; `Icons.Filled.SwapVert` juga tidak ada di set inti).
+- **Catatan ukuran:** judul bagian diperbaiki dari `headlineSm` 18 → `headlineMd` 22 dan subjudul dari `bodySm` 12 → `bodyMd` 14 setelah membandingkan hasil render dengan PNG. (`docs/DESIGN.md` §2 sendiri menyebut `headline-md` = judul bagian.)
+- **Data:** `sample_*`.
+
+### #4 Your Library & #2 Active Search Results
+
+*Belum dikerjakan.*
 
 ---
 
@@ -273,7 +291,7 @@ membaca ulang 17 layar yang sudah ada.
 | 0 | Scaffold Gradle M0 | **[x] selesai 2026-11-16** |
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
 | 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
-| 3 | Tab: #1 #3 #4 #2 | [ ] berikutnya |
+| 3 | Tab: #1 #3 #4 #2 | [~] **2 dari 4** — #1 Home & #3 Discover selesai 2026-11-18; #4 Library & #2 Search berikutnya |
 | 4 | Detail & pemutar: #5 #8 #9 #10 #12 | [ ] |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |
