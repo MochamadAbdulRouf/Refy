@@ -548,3 +548,33 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 - Ini **belum** jadi gerbang otomatis di `check-consistency.py` — alat itu membaca dokumen, bukan kode. Kalau mau ditegakkan otomatis, tempatnya di lint/CI, bukan di gate dokumen. Dicatat sebagai usul, belum dikerjakan.
 
 **Hasil:** `assembleDebug` hijau · APK terpasang & jalan di perangkat uji · screenshot membuktikan `displayHero` dirender ExtraBold asli (variable font bekerja) dan `labelXs` memakai accent · `grep` hex di luar `ui/theme/` = 0.
+---
+## 2026-11-18 — Fase 2: kerangka UI, dan empat hal yang sengaja TIDAK dikerjakan
+**Konteks:** `PLAN.md` Fase 2 — `GlassSurface`, `BottomNavPill`, `MiniPlayer`, `ScaffoldShell` + `NavHost`. Ukuran dan warna diukur ulang dari PNG kanon `home-screen-243ea0d8.png` (390×1224) memakai Pillow, bukan dibaca dari kelas Tailwind saja.
+
+**1. Koreksi token: garis pil nav 12 % → 60 %**
+- Fase 1 memilih **12 %** karena kelas HTML `border-white/12` (aturan §10: efek dari HTML). Sampel piksel PNG kanon membantahnya: tepi pil terbaca `(185,185,195)` di atas latar pil `(18,22,33)` — itu ≈ **70 % putih**; 12 % akan menghasilkan ≈ `(46,48,59)`.
+- `docs/DESIGN.md` §5 (tabel elevasi tingkat 2) dan §6.2 sama-sama menulis `rgba(255,255,255,.6)`.
+- Jadi dua sumber (PNG + dokumen) menang atas satu kelas HTML. Token `RefyColors.NavBorder` = putih 60 %. **Ini membatalkan pilihan Fase 1**, bukan menambah varian.
+
+**2. Sorotan tab aktif — ada di PNG, tidak ada di dokumen**
+- PNG menunjukkan tab aktif diberi latar pil lebih terang. Sampel: `(26,27,47)` di atas `(18,22,33)`; cocok dengan **accent `#8B5CF6` pada 6 %** (`(139·0.06 + 18·0.94) ≈ 25`, `(92·0.06 + 22·0.94) ≈ 26`, `(246·0.06 + 33·0.94) ≈ 46`). Token `RefyColors.TabActiveTint`.
+- `docs/DESIGN.md` §6.2 hanya menyebut "tab aktif: ikon + label putih + drop-shadow". Sorotan latar tidak tercatat — diambil dari PNG.
+
+**3. Blur latar TIDAK diimplementasikan — dan tidak dipalsukan**
+- `GlassSurface` saat ini **hanya jalur mundur** (DESIGN §9 langkah 3): clip → penyangga opaque (`Canvas`) → lapisan kaca → garis 1dp. Latar di belakang kaca **tidak diblur**.
+- Alasan: Compose tidak punya *backdrop blur* bawaan. `Modifier.blur` memblur **isi Composable itu sendiri**, bukan yang ada di belakangnya; kaca dengan latar transparan tidak akan ter-blur olehnya. Opsi nyata: pustaka `haze` (versi stabil 2.1.0 tersedia) atau RenderNode/AHardwareBuffer kustom.
+- **Alternatif ditolak sekarang:** (a) *tambah dependensi `haze` langsung* — menambah permukaan rantai pasok + API publik baru pada fase yang tujuannya kerangka, tanpa keputusan sadar; (b) *pura-pura dengan gradien* — membuat screenshot tampak benar sambil menyembunyikan bahwa R2 (pita warna Mali) belum diuji sama sekali; (c) *tunda seluruh Fase 2* — shell, navigasi, dan ukuran bisa dibuktikan tanpa blur.
+- **Akibat yang harus diingat:** risiko R2 **belum tersentuh**. Jalur blur harus diputuskan sebelum layar yang punya konten bergulir di belakang kaca (Fase 3) dianggap selesai.
+
+**4. Ikon: `material-icons-core`, bukan Material Symbols**
+- Desain memakai Material Symbols (Home, Explore/compass, library, add-circle). Set inti Compose hanya punya Home, Search, List, Add — dan tidak punya `Pause`.
+- **Alternatif ditolak:** `material-icons-extended` (±10 MB, satu dependensi besar untuk beberapa glyph) · mengunduh Material Symbols sebagai font/vektor sekarang (aset ikon final adalah tugas M5, dan desain belum menetapkan ikon apa pun untuk kondisi aktif/nonaktif).
+- Glyph `Pause` dan equalizer digambar dengan `Canvas` (masing-masing <20 baris) — sengaja, supaya tidak menambah dependensi demi satu glyph.
+- **Utang:** ganti dengan Material Symbols saat ikon final disiapkan.
+
+**5. Komponen daftar dipindah ke Fase 3**
+- `TrackRow`, `ChipRow`, `SectionHeader`, `AlbumCard`, `ArtistCard` **tidak** dibuat di Fase 2. Ukurannya bergantung pada layar yang memakainya (#1 Home: kartu 144/176px, chip pil padding 6/14) dan belum ada layar yang membuktikannya.
+- Membangunnya sekarang = menebak, lalu mengukur ulang di Fase 3. PLAN diperbarui: komponen ini dibuat just-in-time saat layar pertama membutuhkannya.
+
+**Verifikasi Fase 2:** `assembleDebug` + `lintDebug` hijau · APK terpasang, 4 tab berpindah (screenshot perangkat) · gate dokumen HIJAU · nol hex di luar `ui/theme/` · mini-player **belum tampil di aplikasi** (belum ada pemutar, M2) dan baru terbukti lewat `@Preview`.

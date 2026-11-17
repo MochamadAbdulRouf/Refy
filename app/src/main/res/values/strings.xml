@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Bahasa UI: English penuh (D6). Semua teks UI lewat resource, bukan hardcoded. -->
+<!-- Bahasa UI: English penuh (D6). Semua teks UI lewat resource, bukan hardcoded.
+
+     Nama resource memakai garis bawah karena Android tidak mengizinkan titik,
+     tetapi kuncinya SAMA dengan inventaris `docs/I18N-KEYS.md`
+     (`nav.home` → `nav_home`, `mini.cd_favorite` → `mini_cd_favorite`). -->
 <resources>
     <string name="app_name" translatable="false">Refy</string>
+
+    <!-- Bottom navigation — D6: "Create", bukan "Buat" -->
+    <string name="nav_home">Home</string>
+    <string name="nav_discover">Discover</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_create">Create</string>
+
+    <!-- Umum -->
+    <string name="common_play">Play</string>
+    <string name="common_pause">Pause</string>
+    <string name="common_playing">Playing</string>
+    <!-- Layar yang belum dibangun (Fase 3+) — dihapus saat semuanya terisi. -->
+    <string name="common_coming_soon">Coming soon</string>
+
+    <!-- Mini-player -->
+    <string name="mini_cd_favorite">Add to favorites</string>
 </resources>

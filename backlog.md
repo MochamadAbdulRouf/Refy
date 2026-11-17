@@ -201,11 +201,11 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 - [ ] #15 User Profile & Audio Settings (profil + ringkasan audio)
 - [ ] #16 Settings (`settings-d60055b1`) — kualitas streaming, kualitas unduhan, normalisasi volume, crossfade, gapless, equalizer, audio output
 - [ ] Mini-player (komponen persisten, 56px, melayang **88–92px** di atas dasar — nav pil naik, ukuran ulang 2026-11-10)
-- [ ] Bottom nav 4 tab: Home / Discover / Library / Create — bentuk **pil mengambang** (**D11**, mengikat): `bottom-4`, `inset-x-4`, `max-w-sm`, `h-[68px]`, `rounded-full`, `bg-[#121621]/85`, `blur(30px)`, border putih 1–1.5px + glow. Kanon `home-screen-243ea0d8`
+- [x] Bottom nav 4 tab: Home / Discover / Library / Create — bentuk **pil mengambang** (**D11**, mengikat) — **komponen selesai 2026-11-18** (`ui/component/BottomNavPill.kt`): `bottom-4/5` (20dp), `inset-x-4` (16dp), `max-w-sm` (384dp), `h-[68px]`, `rounded-full`, `bg-[#121621]/85`, garis putih **60%** (dikoreksi dari 12% lewat sampel piksel PNG), sorotan tab aktif accent 6%. Kanon `home-screen-243ea0d8`. Ikon masih set inti, bukan Material Symbols — lihat `keputusan.md` 2026-11-18
 - [ ] **Remap 17 layar ke palet Kubu B** — tabel remap `docs/DESIGN.md` §1, ukur dengan `python scripts/analyze-snapshot.py`
 - [ ] Ganti tab "Buat" → **"Create"** di bottom nav semua layar (D6) — 9 layar masih "Buat" per 2026-11-10
 - [x] Tema `NocturneTheme` dari token `docs/DESIGN.md` §1 — 2026-11-16 (Fase 1). Palet **Kubu B** (canvas `#09090B`, surface `#141418`, accent `#8B5CF6`), seluruh warna lewat token tema — nol hex di Composable, dibuktikan `grep` (`Color(0x` di luar `ui/theme/` = 0)
-- [ ] Komponen kaca: `RepaintBoundary` + `ColoredBox` dasar sebelum blur + jalur mundur tanpa blur — **prioritas naik 2026-11-10**: nav pil (blur 30px, garis putih nyata, glow luar) + mini-player (blur 36px) kini berdampingan dengan jarak <20px, dua kaca rona terang yang paling mudah memicu pita Mali
+- [~] Komponen kaca: `RepaintBoundary` + `ColoredBox` dasar sebelum blur + jalur mundur tanpa blur — **prioritas naik 2026-11-10**: nav pil (blur 30px, garis putih nyata, glow luar) + mini-player (blur 36px) kini berdampingan dengan jarak <20px, dua kaca rona terang yang paling mudah memicu pita Mali. **2026-11-18:** `GlassSurface` ada dengan struktur §9 (penyangga opaque + garis), tetapi **blur latar belum nyata** — Compose tidak punya backdrop blur bawaan. **R2 belum tersentuh.** Perlu keputusan pustaka (`haze`) atau RenderNode sebelum Fase 3 selesai — lihat `keputusan.md` 2026-11-18
 - [ ] Semua string lewat resource i18n (tidak ada teks hardcoded di Composable) — daftar periksa: `docs/I18N-KEYS.md`
 - [ ] Semua skenario Gherkin US-01...US-05 lolos
 

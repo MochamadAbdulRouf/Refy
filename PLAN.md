@@ -272,11 +272,32 @@ membaca ulang 17 layar yang sudah ada.
 |---|---|---|
 | 0 | Scaffold Gradle M0 | **[x] selesai 2026-11-16** |
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
-| 2 | Kerangka & komponen | [ ] berikutnya |
-| 3 | Tab: #1 #3 #4 #2 | [ ] |
+| 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
+| 3 | Tab: #1 #3 #4 #2 | [ ] berikutnya |
 | 4 | Detail & pemutar: #5 #8 #9 #10 #12 | [ ] |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |
+
+### Fase 2 — catatan hasil (2026-11-18)
+
+| Yang jadi | Bukti |
+|---|---|
+| `ui/component/GlassSurface.kt` | struktur §9: clip → penyangga opaque → lapisan kaca → garis 1dp |
+| `ui/component/BottomNavPill.kt` | pil 68dp, margin 16, maks 384, `#121621`/85, garis 60 %, tab aktif accent 6 % |
+| `ui/component/MiniPlayer.kt` | 56dp, artwork 40, judul/artis 1 baris, favorit 44, tombol putar 36 bergradien + glow, progress 2dp |
+| `ui/shell/Destinations.kt` + `RefyRoot.kt` | `ScaffoldShell` + `NavHost` 4 tab, jarak aman bawah 160dp |
+| `strings.xml` | `nav_home`/`nav_discover`/`nav_library`/`nav_create` (D6: **Create**), `common_play/pause/playing`, `mini_cd_favorite` |
+| Verifikasi | `assembleDebug` + `lintDebug` hijau · terpasang & 4 tab berpindah di perangkat (screenshot `.scratch/fase2-*.png`) · gate dokumen HIJAU · hex di luar `ui/theme/` = 0 |
+
+**Penyimpangan & batasan yang dicatat (jangan dianggap selesai):**
+
+1. **Blur latar belum nyata.** `GlassSurface` hanya jalur mundur (§9 langkah 3): latar di belakang kaca tidak diblur, karena Compose tidak punya backdrop blur bawaan. Keputusan ditunda — opsi: pustaka `haze` (2.1.0 tersedia) atau RenderNode kustom. Detail di `keputusan.md` 2026-11-18.
+2. **Ikon nav memakai `material-icons-core`, bukan Material Symbols.** Desain memakai Home/Explore/library/Add-circle; set inti tidak punya Explore dan ikon lain berbeda. Alasan: `material-icons-extended` ±10 MB untuk satu glyph. Diganti saat ikon final (M5).
+3. **Pil nav punya sorotan tab aktif** (accent 6 %) — ada di PNG kanon, **tidak** disebut `docs/DESIGN.md` §6.2. Diambil dari PNG.
+4. **Garis pil nav 60 %, bukan 12 %** — koreksi atas token Fase 1, bukti sampel piksel PNG. Rincian di `keputusan.md`.
+5. **Mini-player belum terlihat di aplikasi** karena belum ada pemutar (M2). Komponennya ada + `@Preview`; shell hanya menampilkannya bila ada track.
+6. **Komponen daftar (`TrackRow`, `ChipRow`, `SectionHeader`, `AlbumCard`, `ArtistCard`) dipindah ke Fase 3** — dibangun just-in-time saat layar pertama memakainya (#1 Home). Membangunnya tanpa layar berarti menebak ukuran yang belum terukur.
+7. `common_coming_soon` = string sementara untuk placeholder tab; dihapus saat Fase 3 mengisi layar.
 
 ### Fase 0 — catatan hasil (2026-11-16)
 

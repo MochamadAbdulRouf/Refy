@@ -42,3 +42,6 @@ tersimpan lokal saja bila perlu.
 - Sumber angka desain: `docs/DESIGN.md` §1 (warna, Kubu B) · §3 (ukuran) ·
 §9 (risiko blur). Jangan salin hex Kubu A dari HTML Stitch.
 - Tolong pesan commit seterusnya menggunakan bahasa english.
+- Selalu cek obsidian menggunakan MCP Server obsidian yang sudah tersedia, obsidian bekerja sebagai second brain kamu agar tidak kehilangan konteks ketika membuat aplikasi.
+- Selalu cek hasil coding dari setiap tahap, apakah hasilnya sudah sesuai dengan fitur dan ui yang di minta.
+- Di pesan commit tidak perlu ada pesan noreply seperti ini ( "Co-Authored-By: Claude Code &lt;[noreply@anthropic.com](mailto:noreply@anthropic.com)&gt;" )

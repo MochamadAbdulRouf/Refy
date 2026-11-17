@@ -93,4 +93,22 @@ object RefyColors {
 
     /** Latar chip filter inaktif: `rgba(20,20,24,.8)`. */
     val ChipInactive = Color(0xCC141418)
+
+    /**
+     * Garis pil nav. **Dikoreksi 2026-11-16 (Fase 2) dari 12 % → 60 %.**
+     *
+     * Bukti: sampel piksel PNG kanon `home-screen-243ea0d8.png` pada tepi pil
+     * menghasilkan `(185,185,195)` di atas latar pil `(18,22,33)` — itu ≈ 70 %
+     * putih, bukan 12 %. Nilai 12 % hanya muncul di kelas HTML
+     * (`border-white/12`), sedangkan `docs/DESIGN.md` §5 dan §6.2 menulis
+     * `rgba(255,255,255,.6)`, dan PNG setuju dengan dokumen. Rincian: `keputusan.md`
+     * 2026-11-16 (Fase 2).
+     */
+    val NavBorder = Color(0x99FFFFFF)
+
+    /** Sorotan tab aktif di pil nav: accent 6 % — hasil sampel PNG `(26,27,47)` di atas `(18,22,33)`. */
+    val TabActiveTint = Color(0x0F8B5CF6)
+
+    /** Rel progress bar yang belum terisi. */
+    val ProgressTrack = Color(0x33FFFFFF)
 }
