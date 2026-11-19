@@ -52,11 +52,11 @@ dikerjakan lebih dulu), `LANJUT` = 6 layar sisanya setelah #16 selesai.
 
 | # | Nama layar (PRD §9) | Berkas snapshot (`.stitch/electric-purple/`) | D7 | Prioritas | Status UI |
 |---|---|---|---|---|---|
-| 1 | Home Screen | `home-screen-243ea0d8` | ✅ | MVP-1 | [ ] |
-| 2 | Active Search Results | `active-search-results-13c3c6cd` | ✅ | MVP-4 | [ ] |
-| 3 | Library & Search Screen (Discover) | `library-search-screen-3a4eb7d9` | ✅ | MVP-2 | [ ] |
-| 4 | Your Library | `your-library-be4f34bd` | ✅ | MVP-3 | [ ] |
-| 5 | Album Detail & Tracklist | `album-detail-tracklist-76a16cec` | ✅ | MVP-5 | [ ] |
+| 1 | Home Screen | `home-screen-243ea0d8` | ✅ | MVP-1 | [x] |
+| 2 | Active Search Results | `active-search-results-13c3c6cd` | ✅ | MVP-4 | [x] |
+| 3 | Library & Search Screen (Discover) | `library-search-screen-3a4eb7d9` | ✅ | MVP-2 | [x] |
+| 4 | Your Library | `your-library-be4f34bd` | ✅ | MVP-3 | [x] |
+| 5 | Album Detail & Tracklist | `album-detail-tracklist-76a16cec` | ✅ | MVP-5 | [x] |
 | 6 | Album Detail - After Hours | `album-detail-after-hours-f4bb6b8c` | — | LANJUT | [ ] varian #5 — dipakai sebagai uji tema Kubu B penuh |
 | 7 | Playlist Detail - Late Night Drives | `playlist-detail-late-night-drives-2f7236b9` | — | LANJUT | [ ] butuh data playlist (M4) |
 | 8 | Artist Profile | `artist-profile-ebadb5ac` | ✅ | MVP-6 | [ ] |
@@ -282,6 +282,16 @@ Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
 - **Penyimpangan (D15):** avatar kanan atas tidak dirender · kueri belum bisa diketik di layar ini (menerima kueri dari luar; input sebenarnya butuh resolver M1) · artwork gradien, bukan foto.
 - **Koreksi setelah banding dengan PNG:** judul "Search" di atas kolom cari dihapus (desain tidak punya) dan badge kartu Top Result dijadikan pil, bukan teks polos.
 
+### #5 Album Detail & Tracklist — 2026-11-19
+
+- **Berkas:** `ui/album/AlbumDetailScreen.kt` (stateless) + `AlbumDetailUiState.kt`; route `album` di `RefyRoot` (non-tab), dibuka dari kartu Home, kembali lewat panah. `SectionHeader` mendapat slot `trailing` opsional (dipakai tombol refresh).
+- **Susunan dari PNG kanon `album-detail-tracklist-76a16cec`:** toolbar (kembali · antrean · menu) → artwork 208dp dengan glow radial + gradien bawah bergaris "01 Alone Again / 02 Too Late" → judul → artis + avatar 20dp + centang → meta → dua pil badge → header "Recommended Tracks" + subjudul + tombol refresh 36dp → kolom cari → 4 baris rekomendasi 40dp + tombol plus 32dp → baris aksi (hati terisi accent · jam + titik · bagikan · jarak · shuffle + titik · tombol putar 56dp bergradien) → header tracklist `#  TITLE` + glyph jam 16dp → 10 baris lagu (nomor/equalizer, judul + badge E, artis, durasi, menu).
+- **Token dipakai:** `headlineLgMobile` judul, `labelMd` artis & header kolom, `bodySm` meta/durasi, `labelXs` badge & pratinjau artwork, `Surface`/`SurfaceElevated`/`SurfaceHighest`, `Accent`/`AccentBright`/`AccentDeep` (gradien tombol putar + glow `shadow` 12dp), `Size.iconButton` 44dp, `Offset.contentBottom` dari shell. Artwork 208dp + halo 224dp.
+- **Kunci i18n:** `album.*` (meta, badge_lossless, badge_atmos, recommended_tracks, recommended_subtitle, search_hint, tracklist_title, tracklist_duration_cd, cd_refresh, cd_history, cd_queue, cd_play, cd_shuffle, cd_more, badge_explicit), `common.back`, `common.more_options`, `mini.cd_favorite`, `np.share`, `search.verified`.
+- **Penyimpangan (D15 / inventaris / set ikon):** baris chrome global (avatar, bel, headphone) tidak dirender · avatar & ikon cast/mic tidak ada · tombol unduh offline tidak dirender (mesin unduh v0.2) · glyph antrean, shuffle, dan jam digambar sendiri dengan `Canvas` karena `material-icons-core` tidak punya `QueueMusic`/`Shuffle`/`Schedule` · blok "Recommended Tracks" kedua di bawah tracklist tidak diduplikasi (artefak desain) · artwork memakai gradien token, bukan foto.
+- **Koreksi setelah banding dengan PNG:** tombol refresh di header rekomendasi, tombol riwayat (jam + titik accent), glyph jam di header kolom durasi, hint cari khusus album ("Search tracks, artists, or audio..."), dan tombol antrean di toolbar ditambahkan setelah screenshot pertama tidak cocok dengan desain.
+- **Data:** `sample_*`; `nowPlayingTrackId = "t3"` menyorot "Hardest To Love" agar equalizer terlihat.
+
 ### Fase 3 — catatan hasil (2026-11-18)
 
 - Layar #1, #3, #4, #2 terpasang dan dicocokkan dengan PNG kanon lewat screenshot `.scratch/fase3-*.png` (tidak di-commit).
@@ -310,7 +320,7 @@ membaca ulang 17 layar yang sudah ada.
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
 | 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
 | 3 | Tab: #1 #3 #4 #2 | **[x] selesai 2026-11-18** — 4 layar terpasang & dicocokkan dengan PNG kanon |
-| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | [ ] |
+| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | **[~] berjalan** — #5 selesai 2026-11-19 |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |
 

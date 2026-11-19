@@ -5,7 +5,7 @@
 **Sumber musik v0.1:** katalog YouTube Music via extractor komunitas
 **Lisensi rencana:** GPL-3.0-or-later
 **Repositori:** `D:\Coding\Refy`
-**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0–3 selesai**: #1 Home, #3 Discover, #4 Your Library, #2 Active Search Results tampil dengan data contoh, terpasang di perangkat. Berikutnya Fase 4 (#5 Album Detail → #8 Artist Profile → #9 Now Playing → #10 Playback Queue → #12 Track Options) — urutan di `PLAN.md`
+**Status:** **M0 berjalan** — audit kelayakan 2026-11-12 menutup 8 penghambat; PRD v0.2, desain tersinkron dari Stitch (**dicek ulang 2026-11-12**, `updateTime` `2026-11-10T18:29:53Z`). **Fase 0–3 selesai**: #1 Home, #3 Discover, #4 Your Library, #2 Active Search Results tampil dengan data contoh, terpasang di perangkat. **Fase 4 berjalan** — #5 Album Detail & Tracklist selesai 2026-11-19; berikutnya #8 Artist Profile → #9 Now Playing → #10 Playback Queue → #12 Track Options (urutan di `PLAN.md`)
 **Desain:** Stitch project **Electric Purple Music App** (`projects/9190295645942987043`), design system **Nocturne Audio** (`assets/9feaa5b53730417e8c1d163ffc007c63`), **18 layar UI + 2 aset** (17 layar nyata + 1 artefak)
 **Perhatian:** palet **sudah dikunci** — Kubu B (D8). Bottom nav **pil mengambang** (D11). Lihat `docs/DESIGN.md` §1 (remap) dan §6.2 (nav).
 

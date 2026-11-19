@@ -78,6 +78,28 @@
     <string name="common_clear">Clear</string>
     <string name="common_search">Search</string>
     <string name="common_play_playlist">Play playlist</string>
+    <string name="common_back">Back</string>
+    <string name="search_verified">Verified</string>
+
+    <!-- ============================================================
+         ALBUM (#5) — kunci mengikuti docs/I18N-KEYS.md §8.
+         ============================================================ -->
+    <string name="album_meta">Album • %1$s • %2$d songs, %3$s</string>
+    <string name="album_badge_lossless">Lossless Audio</string>
+    <string name="album_badge_atmos">Dolby Atmos</string>
+    <string name="album_recommended_tracks">Recommended Tracks</string>
+    <string name="album_recommended_subtitle">Based on this album &amp; vibe</string>
+    <string name="album_cd_refresh">Refresh recommendations</string>
+    <string name="album_search_hint">Search tracks, artists, or audio…</string>
+    <string name="album_tracklist_title">TITLE</string>
+    <string name="album_tracklist_duration_cd">Duration</string>
+    <string name="album_cd_history">Listening history</string>
+    <string name="album_cd_queue">Playback queue</string>
+    <string name="album_cd_play">Play</string>
+    <string name="album_cd_shuffle">Shuffle</string>
+    <string name="album_cd_more">More</string>
+    <string name="np_share">Share</string>
+    <string name="album_badge_explicit" translatable="false">E</string>
 
     <!-- ============================================================
          SEMENTARA — data contoh Home. Belum ada resolver (M1), jadi kartu
@@ -134,4 +156,18 @@
     <string name="sample_late_night_drives" translatable="false">Late Night Drives</string>
     <string name="sample_deep_focus" translatable="false">Deep Focus Techno</string>
     <string name="sample_deep_focus_subtitle" translatable="false">Downloaded • 94 songs • Offline ready</string>
+    <string name="sample_album_after_hours" translatable="false">After Hours</string>
+    <string name="sample_artist_the_weeknd" translatable="false">The Weeknd</string>
+    <string name="sample_album_year" translatable="false">2020</string>
+    <string name="sample_album_duration" translatable="false">56 min</string>
+    <string name="sample_track_alone_again" translatable="false">Alone Again</string>
+    <string name="sample_track_too_late" translatable="false">Too Late</string>
+    <string name="sample_track_hardest_to_love" translatable="false">Hardest To Love</string>
+    <string name="sample_track_scared_to_live" translatable="false">Scared to Live</string>
+    <string name="sample_track_snowchild" translatable="false">Snowchild</string>
+    <string name="sample_track_escape_from_la" translatable="false">Escape from LA</string>
+    <string name="sample_track_heartless" translatable="false">Heartless</string>
+    <string name="sample_track_faith" translatable="false">Faith</string>
+    <string name="sample_track_blinding_lights" translatable="false">Blinding Lights</string>
+    <string name="sample_track_in_your_eyes" translatable="false">In Your Eyes</string>
 </resources>

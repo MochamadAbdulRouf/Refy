@@ -192,7 +192,7 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 - [x] #2 Active Search Results (Top Result, chip Top/Songs/Albums/Artists/Playlists, Songs, Albums) — **UI selesai 2026-11-18** (`ui/search/`, route `search`), kueri diterima dari luar; avatar & chip Podcasts tidak dirender (D15). Rincian `PLAN.md` §5
 - [x] #3 Library & Search Screen (tab Discover: Browse all, chip genre, Recently played) — **UI selesai 2026-11-18** (`ui/discover/`), data contoh `sample_*`. Ikon mic/kamera & "Explore tags" tidak dirender (D15); judul memakai `discover.title`, bukan `<h1>` desain
 - [x] #4 Your Library (tab Library: Playlists, Albums, Artists; Podcasts & Downloaded ditunda D15) — **UI selesai 2026-11-18** (`ui/library/`), data contoh `sample_*`; tombol "+" menyambung ke #14 di Fase 5. Rincian `PLAN.md` §5
-- [ ] #5 Album Detail & Tracklist (`album-detail-tracklist-76a16cec`)
+- [x] #5 Album Detail & Tracklist (`album-detail-tracklist-76a16cec`) — **UI selesai 2026-11-19** (`ui/album/`, route `album` dari kartu Home). Toolbar kembali/antrean/menu, hero 208dp + glow, badge, rekomendasi + refresh, baris aksi (favorit/riwayat/bagikan/shuffle/putar), tracklist 10 baris dengan baris aktif. Glyph antrean/shuffle/jam digambar `Canvas` (set inti tak punya). Unduh offline & chrome global tidak dirender. Rincian `PLAN.md` §5
 - [ ] #8 Artist Profile
 - [ ] #9 Now Playing Screen
 - [ ] #10 Playback Queue (checkbox multi-pilih + drag handle)

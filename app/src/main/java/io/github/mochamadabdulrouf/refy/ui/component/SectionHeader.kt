@@ -44,6 +44,7 @@ fun SectionHeader(
     subtitle: String? = null,
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = modifier
@@ -79,6 +80,7 @@ fun SectionHeader(
                 )
             }
         }
+        trailing?.invoke()
     }
 }
 

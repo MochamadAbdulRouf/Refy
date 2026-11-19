@@ -23,6 +23,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.mochamadabdulrouf.refy.R
+import io.github.mochamadabdulrouf.refy.ui.album.AlbumDetailScreen
+import io.github.mochamadabdulrouf.refy.ui.album.sampleAlbumDetailUiState
 import io.github.mochamadabdulrouf.refy.ui.component.BottomNavPill
 import io.github.mochamadabdulrouf.refy.ui.discover.DiscoverScreen
 import io.github.mochamadabdulrouf.refy.ui.discover.sampleDiscoverUiState
@@ -119,7 +121,12 @@ fun RefyRoot(modifier: Modifier = Modifier) {
             startDestination = RefyDestination.Home.route,
         ) {
             composable(RefyDestination.Home.route) {
-                HomeScreen(state = sampleHomeUiState())
+                HomeScreen(
+                    state = sampleHomeUiState(),
+                    onItemClick = {
+                        navController.navigate(ALBUM_ROUTE) { launchSingleTop = true }
+                    },
+                )
             }
             composable(RefyDestination.Discover.route) {
                 DiscoverScreen(
@@ -144,12 +151,21 @@ fun RefyRoot(modifier: Modifier = Modifier) {
                     onClear = {},
                 )
             }
+            composable(ALBUM_ROUTE) {
+                AlbumDetailScreen(
+                    state = sampleAlbumDetailUiState(),
+                    onBack = { navController.popBackStack() },
+                )
+            }
         }
     }
 }
 
 /** Bukan tab: #2 dibuka dari kolom cari, jadi identitasnya route biasa. */
 private const val SEARCH_ROUTE = "search"
+
+/** Layar #5 — dibuka dari kartu Home; kembali lewat tombol panah. */
+private const val ALBUM_ROUTE = "album"
 
 @Composable
 private fun PlaceholderScreen(destination: RefyDestination) {

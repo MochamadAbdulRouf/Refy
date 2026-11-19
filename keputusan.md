@@ -627,3 +627,30 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 - Screenshot pertama salah layar karena aplikasi sudah di latar belakang dan tap membuka aplikasi lain (WhatsApp). Pola yang dipakai: `monkey -p <pkg> -c android.intent.category.LAUNCHER 1` → `dumpsys window | grep mCurrentFocus` → baru tap. Jangan percaya screenshot tanpa memeriksa isinya.
 
 **Verifikasi:** `assembleDebug` hijau · APK terpasang · #4 dan #2 dicocokkan dengan PNG kanon lewat screenshot (`.scratch/fase3-library.png`, `.scratch/fase3-search.png`) · tab Discover tetap menyala di route `search`.
+
+## 2026-11-19 — Fase 4 dibuka: #5 Album Detail & Tracklist
+**Konteks:** layar pertama Fase 4, dasar visual untuk #8 Artist Profile. Data masih contoh `sample_*`; tanpa resolver (M1) dan Room (M4).
+
+**1. Route `album` non-tab, dibuka dari kartu Home**
+- `NavHost` menambah route `album` di luar 4 tab; `popBackStack()` menutup lewat panah kembali. Tab yang menyala tetap **Home** karena pintu masuknya dari sana.
+- **Alternatif ditolak:** (a) *tab kelima Album* — melanggar D11; (b) *dialog penuh* — desain adalah layar penuh dengan bottom nav tetap terlihat.
+
+**2. Tiga glyph digambar sendiri dengan `Canvas`**
+- `material-icons-core` 1.7.8 tidak punya `QueueMusic`, `Shuffle`, maupun `Schedule` (keduanya hanya di extended, yang menambah ~20 MB). Glyph antrean, shuffle, dan jam digambar manual dari PNG kanon.
+- **Alternatif ditolak:** menambah `material-icons-extended` hanya untuk tiga ikon. Lihat juga catatan Material Symbols di entri 2026-11-18.
+
+**3. Lima koreksi setelah membandingkan render dengan PNG kanon**
+- Tombol **refresh** 36dp di header "Recommended Tracks" ditambahkan (`album.cd_refresh`).
+- Tombol **riwayat** (glyph jam + titik accent) di baris aksi; hati diubah dari outline ke **terisi accent**.
+- Header kolom durasi memakai **glyph jam** 16dp, bukan teks (`album.tracklist_duration_cd` kini deskripsi, bukan label).
+- Kolom cari memakai hint khusus album "Search tracks, artists, or audio..." (`album.search_hint`), bukan hint global.
+- Toolbar mendapat tombol **antrean** di antara kembali dan menu (`album.cd_queue`) — render pertama hanya punya dua tombol.
+- `SectionHeader` diberi slot `trailing` opsional; tanpa slot itu API lama tetap jalan.
+
+**4. Yang tetap tidak dirender (D15/v0.2, dicatat di `PLAN.md` §5)**
+- Baris chrome global di atas toolbar (avatar, bel, headphone) — v0.1 tanpa login dan tanpa notifikasi.
+- Tombol unduh offline per lagu — mesin unduh baru ada di v0.2.
+- Blok "Recommended Tracks" kedua di bawah tracklist — artefak desain (blok yang sama diulang), tidak diduplikasi.
+
+**Verifikasi:** `assembleDebug` hijau · APK terpasang · dicocokkan dengan PNG kanon lewat screenshot `.scratch/album-hero3.png` dan `.scratch/album-actions.png` · gate dokumen HIJAU (A–L) · nol `Color(0x` di luar `ui/theme/`.
+**Belum:** #8 Artist Profile, #9 Now Playing, #10 Playback Queue, #12 Track Options; blur kaca (R2) belum tersentuh.

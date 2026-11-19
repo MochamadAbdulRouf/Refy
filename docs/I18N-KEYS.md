@@ -142,9 +142,14 @@ Tema **tidak** memengaruhi teks (D12, dark-only). Bahasa Inggris di `values/`;
 | `album.recommended_tracks` | Recommended Tracks | |
 | `album.recommended_subtitle` | Based on this album & vibe | |
 | `album.tracklist_title` | TITLE | kolom |
-| `album.tracklist_duration_cd` | Duration | deskripsi `schedule` |
+| `album.tracklist_duration_cd` | Duration | deskripsi glyph jam |
+| `album.search_hint` | Search tracks, artists, or audio... | placeholder kolom cari di dalam layar |
+| `album.cd_refresh` | Refresh recommendations | tombol bulat di header rekomendasi |
+| `album.cd_history` | Listening history | tombol glyph jam + titik |
+| `album.cd_queue` | Playback queue | tombol glyph antrean di toolbar |
 | `album.cd_play` / `album.cd_shuffle` | Play / Shuffle | |
 | `album.cd_more` | More | |
+| `album.badge_explicit` | E | `translatable="false"`, badge eksplisit |
 
 > Layar **#6** (`album-detail-after-hours`) ditunda per D7 — varian visual dari
 > layar yang sama. Jangan buat kunci terpisah untuknya.
