@@ -118,8 +118,8 @@ Satu keluarga: **Plus Jakarta Sans**. Tidak ada font kedua.
 | `display-hero` | 40 / 800 / 48, tracking −0.03em | judul hero (hanya layar player penuh) |
 | `headline-lg` | 32 / 700 / 40, −0.02em | judul bagian besar di tablet |
 | `headline-lg-mobile` | 26 / 700 / 34, −0.02em | judul layar di ponsel |
-| `headline-md` | 22 / 600 / 28, −0.015em | judul bagian (home, album) |
-| `headline-sm` | 18 / 600 / 24, −0.01em | sub-judul bagian |
+| `headline-md` | 22 / 600 / 28, −0.015em | judul non-halaman (lagu di Now Playing, judul sheet) |
+| `headline-sm` | 18 / 600 / 24, −0.01em | **judul bagian** (Popular, Made For You, Recommended Tracks) — bukti PNG/HTML 2026-11-19; baris ini dulu salah menulis headline-md sebagai judul bagian |
 | `body-lg` | 16 / 500 / 24, −0.005em | teks isi utama |
 | `body-md` | 14 / 400 / 20 | metadata, deskripsi |
 | `body-sm` | 12 / 400 / 16, +0.01em | keterangan tambahan |

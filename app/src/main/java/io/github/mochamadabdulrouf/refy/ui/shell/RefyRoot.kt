@@ -25,6 +25,8 @@ import androidx.navigation.compose.rememberNavController
 import io.github.mochamadabdulrouf.refy.R
 import io.github.mochamadabdulrouf.refy.ui.album.AlbumDetailScreen
 import io.github.mochamadabdulrouf.refy.ui.album.sampleAlbumDetailUiState
+import io.github.mochamadabdulrouf.refy.ui.artist.ArtistProfileScreen
+import io.github.mochamadabdulrouf.refy.ui.artist.sampleArtistProfileUiState
 import io.github.mochamadabdulrouf.refy.ui.component.BottomNavPill
 import io.github.mochamadabdulrouf.refy.ui.discover.DiscoverScreen
 import io.github.mochamadabdulrouf.refy.ui.discover.sampleDiscoverUiState
@@ -88,11 +90,13 @@ fun ScaffoldShell(
 }
 
 /**
- * Akar navigasi: 4 tab, masing-masing satu route.
+ * Akar navigasi: 4 tab + route non-tab.
  *
- * Isi tab: #1 Home, #3 Discover, #4 Your Library sudah nyata (data contoh);
- * #2 Active Search Results adalah route terpisah (`search`) yang dibuka dari
- * kolom cari Discover/Library, bukan tab kelima.
+ * Isi tab: #1 Home, #3 Discover, #4 Your Library sudah nyata (data contoh).
+ * Route non-tab: #2 Active Search Results (`search`, dari kolom cari), #5 Album
+ * Detail (`album`, dari kartu Home), #8 Artist Profile (`artist`, dari baris
+ * artis di Library). Tab yang menyala saat route non-tab aktif adalah tab
+ * tempat route itu dibuka.
  */
 @Composable
 fun RefyRoot(modifier: Modifier = Modifier) {
@@ -100,7 +104,12 @@ fun RefyRoot(modifier: Modifier = Modifier) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val selected = RefyDestination.entries.firstOrNull { it.route == currentRoute }
-        ?: if (currentRoute == SEARCH_ROUTE) RefyDestination.Discover else RefyDestination.Home
+        ?: when (currentRoute) {
+            // Pintu masuk keduanya → tab tempat ia dibuka (peta navigasi flows/00).
+            SEARCH_ROUTE -> RefyDestination.Discover
+            ARTIST_ROUTE -> RefyDestination.Library
+            else -> RefyDestination.Home
+        }
 
     ScaffoldShell(
         selected = selected,
@@ -139,6 +148,14 @@ fun RefyRoot(modifier: Modifier = Modifier) {
                     state = sampleLibraryUiState(),
                     onSearchClick = { navController.navigate(SEARCH_ROUTE) { launchSingleTop = true } },
                     onCreatePlaylist = {},
+                    onItemClick = { item ->
+                        // Data contoh: baris artis → #8, baris album → #5,
+                        // baris playlist menunggu #7 (Fase 6).
+                        when (item.id) {
+                            "lib5" -> navController.navigate(ARTIST_ROUTE) { launchSingleTop = true }
+                            "lib6" -> navController.navigate(ALBUM_ROUTE) { launchSingleTop = true }
+                        }
+                    },
                 )
             }
             composable(RefyDestination.Create.route) {
@@ -157,6 +174,14 @@ fun RefyRoot(modifier: Modifier = Modifier) {
                     onBack = { navController.popBackStack() },
                 )
             }
+            composable(ARTIST_ROUTE) {
+                ArtistProfileScreen(
+                    state = sampleArtistProfileUiState(),
+                    onBack = { navController.popBackStack() },
+                    // Kartu discography membuka detail album (flows/00: #8 → #5).
+                    onAlbumClick = { navController.navigate(ALBUM_ROUTE) { launchSingleTop = true } },
+                )
+            }
         }
     }
 }
@@ -166,6 +191,9 @@ private const val SEARCH_ROUTE = "search"
 
 /** Layar #5 — dibuka dari kartu Home; kembali lewat tombol panah. */
 private const val ALBUM_ROUTE = "album"
+
+/** Layar #8 — dibuka dari baris artis di Library; kembali lewat tombol panah. */
+private const val ARTIST_ROUTE = "artist"
 
 @Composable
 private fun PlaceholderScreen(destination: RefyDestination) {

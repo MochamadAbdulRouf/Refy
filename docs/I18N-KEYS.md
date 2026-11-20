@@ -168,6 +168,9 @@ Tema **tidak** memengaruhi teks (D12, dark-only). Bahasa Inggris di `values/`;
 | `artist.see_discography` | See discography | |
 | `artist.tab_albums` | Albums | |
 | `artist.tab_singles_eps` | Singles & EPs | |
+| `artist.tab_popular_releases` | Popular Releases | chip aktif discography |
+| `artist.release_meta` | %1$s • Album | meta kartu discography, angka dari data |
+| `common.play` / `album.cd_shuffle` / `np.share` / `common.back` / `common.more_options` | Play / Shuffle / Share / Back / More options | dipakai ulang dari area lain |
 
 ## 10. #9 Now Playing Screen
 

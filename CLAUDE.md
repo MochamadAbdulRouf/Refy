@@ -45,3 +45,6 @@ tersimpan lokal saja bila perlu.
 - Selalu cek obsidian menggunakan MCP Server obsidian yang sudah tersedia, obsidian bekerja sebagai second brain kamu agar tidak kehilangan konteks ketika membuat aplikasi.
 - Selalu cek hasil coding dari setiap tahap, apakah hasilnya sudah sesuai dengan fitur dan ui yang di minta.
 - Di pesan commit tidak perlu ada pesan noreply seperti ini ( "Co-Authored-By: Claude Code &lt;[noreply@anthropic.com](mailto:noreply@anthropic.com)&gt;" )
+- Selalu gunakan skill yang ada di path berikut (C:\\Users\\ASUS\\.agents\\skills\\), gunakan skill yang di butuhkan sesuai permintaan atau task yang di berikan, contoh ketika user memberikan teks design atau redesign ui, gunakan skill design seperti frontend-design atau impeccable.
+- Bandingkan hasil yang sudah jadi dengan screenshot atau layer stitch, hasilnya harus perfect dan sempurna seperti yang ada di stitch.
+- Implementasi UI dari Stitch: PNG = acuan layout, sumber angka (menang atas HTML), HTML hanya untuk teks dan nama ikon (via `grep -o`); susun ulang dengan komponen Compose/M3 idiomatik (jangan terjemahkan HTML literal), semua warna/tipografi/radius lewat `NocturneTheme` (tanpa hardcode), lalu bandingkan hasil dengan PNG dan jangan nyatakan selesai sebelum cocok.

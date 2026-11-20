@@ -1,6 +1,7 @@
 # PLAN — Implementasi UI dari desain Stitch
 
-Status: **rencana, menunggu persetujuan.** Belum ada kode ditulis.
+Status: **berjalan** — Fase 0–3 selesai (2026-11-16/18), Fase 4 dikerjakan
+(#5 selesai 2026-11-19, #8 selesai 2026-11-20).
 Dibuat: 2026-11-15.
 
 Gerbang dokumen: `python scripts/check-consistency.py` → **HIJAU, exit 0** (A–L lolos,
@@ -11,7 +12,7 @@ Sumber kebenaran, dalam urutan prioritas:
 1. `docs/DESIGN.md` §1 (token Kubu B) · §3 (ukuran) · §9 (risiko blur)
 2. `.stitch/electric-purple/*.png` (tata letak nyata)
 3. `.stitch/electric-purple/*.html` (hanya bila PNG tidak cukup jelas — dibaca **petik**, bukan penuh)
-4. `docs/I18N-KEYS.md` (161 kunci, 11 layar MVP)
+4. `docs/I18N-KEYS.md` (168 kunci, 11 layar MVP)
 
 ---
 
@@ -59,7 +60,7 @@ dikerjakan lebih dulu), `LANJUT` = 6 layar sisanya setelah #16 selesai.
 | 5 | Album Detail & Tracklist | `album-detail-tracklist-76a16cec` | ✅ | MVP-5 | [x] |
 | 6 | Album Detail - After Hours | `album-detail-after-hours-f4bb6b8c` | — | LANJUT | [ ] varian #5 — dipakai sebagai uji tema Kubu B penuh |
 | 7 | Playlist Detail - Late Night Drives | `playlist-detail-late-night-drives-2f7236b9` | — | LANJUT | [ ] butuh data playlist (M4) |
-| 8 | Artist Profile | `artist-profile-ebadb5ac` | ✅ | MVP-6 | [ ] |
+| 8 | Artist Profile | `artist-profile-ebadb5ac` | ✅ | MVP-6 | [x] |
 | 9 | Now Playing Screen | `now-playing-screen-57a3bcf2` | ✅ | MVP-7 | [ ] |
 | 10 | Playback Queue | `playback-queue-a12c7d72` | ✅ | MVP-8 | [ ] |
 | 11 | Expanded Live Lyrics | `expanded-live-lyrics-002312fb` | — | LANJUT | [ ] data lirik belum ada (v0.2) — render shell + keadaan kosong |
@@ -164,7 +165,7 @@ unduhan" / "Lirik belum tersedia"). Jangan bikin data palsu supaya tampak penuh.
 
 Penutup:
 
-- Audit i18n: 161 kunci di `docs/I18N-KEYS.md` terpakai 100 %, nol hardcoded.
+- Audit i18n: kunci di `docs/I18N-KEYS.md` (168 per 2026-11-19) terpakai 100 %, nol hardcoded.
 - Audit kaca: jalur mundur tanpa blur teruji di perangkat Mali.
 - Audit token: nol hex di luar `ui/theme/`.
 - `python scripts/analyze-snapshot.py` + `check-consistency.py` hijau.
@@ -262,7 +263,12 @@ Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
 - **Berkas:** `ui/discover/DiscoverScreen.kt` + `DiscoverUiState.kt`; komponen baru `SearchField`, `MediaRow`, `GenreCard` (di dalam layar).
 - **Susunan:** judul → kolom cari → "Browse all" (grid genre 2 kolom, rasio 1.45) → chip (Playlists/Artists/Albums) → "Recently played" (daftar baris).
 - **Penyimpangan:** judul memakai `discover.title` ("Discover"), bukan `<h1>` desain (cacat #2 di inventaris) · ikon mic/kamera & aksi "Explore tags" tidak dirender (D15) · chip `Downloaded`/`Podcasts` tidak dirender (D15) · ikon urutkan/grid di header "Recently played" tidak dirender (belum ada perilaku; `Icons.Filled.SwapVert` juga tidak ada di set inti).
-- **Catatan ukuran:** judul bagian diperbaiki dari `headlineSm` 18 → `headlineMd` 22 dan subjudul dari `bodySm` 12 → `bodyMd` 14 setelah membandingkan hasil render dengan PNG. (`docs/DESIGN.md` §2 sendiri menyebut `headline-md` = judul bagian.)
+- **Catatan ukuran (dikoreksi 2026-11-19):** judul bagian **`headlineSm` 18** —
+  benar untuk semua layar. Klaim lama "18 → 22 setelah banding PNG" salah: ukur
+  ulang PNG Home ("Made For You" tinggi 17px) + kelas HTML Home/Discover/album/
+  artist semuanya `font-headline-sm`. `docs/DESIGN.md` §4 baris `headline-md`
+  juga sudah dikoreksi (22 = judul Now Playing/sheet, bukan judul bagian).
+  Subjudul `bodyMd` 14 tetap (banding PNG: baris subjudul memang 14).
 - **Data:** `sample_*`.
 
 ### #4 Your Library (tab Library) — 2026-11-18
@@ -292,6 +298,69 @@ Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
 - **Koreksi setelah banding dengan PNG:** tombol refresh di header rekomendasi, tombol riwayat (jam + titik accent), glyph jam di header kolom durasi, hint cari khusus album ("Search tracks, artists, or audio..."), dan tombol antrean di toolbar ditambahkan setelah screenshot pertama tidak cocok dengan desain.
 - **Data:** `sample_*`; `nowPlayingTrackId = "t3"` menyorot "Hardest To Love" agar equalizer terlihat.
 
+### #8 Artist Profile — 2026-11-19
+
+- **Berkas:** `ui/artist/ArtistProfileScreen.kt` (stateless) + `ArtistProfileUiState.kt`;
+  komponen baru `ui/component/Glyphs.kt` (`ShuffleGlyph`, `PlayingBars` — dipakai
+  bersama #5, kode duplikat dihapus dari `AlbumDetailScreen`); route `artist`
+  (non-tab) di `RefyRoot`, dibuka dari baris artis Library (`lib5`), tab Library
+  tetap menyala; kartu discography → route album (alur #8 → #5).
+- **Susunan dari PNG kanon `artist-profile-ebadb5ac`:** hero 290dp gradien
+  `AccentBright → AccentDeep` + scrim bawah ke `Surface` (toolbar dalam hero:
+  kembali · bagikan · menu, tombol lingkaran 40dp `Surface@0.7`) → badge
+  `VERIFIED ARTIST` (pill, glow `shadow 8` AccentBright, centang 14dp) + nama
+  `headlineLgMobile` + "112,419,802 monthly listeners" + titik accent → baris
+  aksi (pil Following 36dp glow `pillGlow` · menu 36dp · jarak · shuffle 44dp · FAB
+  56dp gradien + `PlayArrow` 32) → header "Popular" + "See all" → 4 baris lagu
+  (nomor/`PlayingBars` 14dp, artwork 44dp, judul `labelLg`, streams `bodySm`,
+  menu 32dp) → header "Discography" + "See discography" → 3 chip → kartu
+  discography 148dp horizontal (artwork rasio 1, judul, meta "2020 • Album").
+- **Token:** `Surface` baris aktif (remap `#1c1b1d` → §1), `SurfaceHighest` chip
+  inaktif artis (remap `#2a2a2c`, sampel piksel PNG), `Accent` judul baris aktif
+  (DESIGN §6.4), chip aktif `Accent` + putih + glow `pillGlow` AccentBright
+  (bukti HTML `rgba(168,85,247)` 20–35px), `headlineSm` 18 untuk kedua judul
+  bagian (bukti PNG: "Popular" lebar 63px = 18px), `Margin.mobile` 16.
+- **Kunci i18n:** `artist.*` (verified, monthly_listeners, streams, following,
+  follow, popular, discography, see_discography, tab_popular_releases, tab_albums,
+  tab_singles_eps, release_meta) + `sample_*`; reuse `common.back`,
+  `common.more_options`, `common.play`, `album.cd_shuffle`, `np.share`.
+- **Glyph:** `IosShareGlyph` + `MoreHorizGlyph` digambar sendiri dengan `Canvas`
+  (`material-icons-core` tidak punya `IosShare`/`MoreHoriz`); shuffle + equalizer
+  pindah ke `Glyphs.kt` dipakai bersama #5.
+- **Penyimpangan (semua sudah terdokumentasi):** chrome global (avatar/bel/tune)
+  tidak dirender (D15 — hero naik ~32dp) · foto hero → gradien token (belum ada
+  sumber gambar) · backdrop blur dilewati (R2) · baris lagu memakai jumlah stream
+  bukan durasi (HTML memang streams) · mini-player tidak tampil (global, M2 —
+  komponen ada, shell menampilkannya bila pemutar ada).
+- **Koreksi setelah banding dengan PNG (2026-11-19):** judul bagian
+  `headlineMd` 22 → `headlineSm` 18 (PNG + HTML keempat layar) · glow chip aktif
+  ditambahkan · tinggi chip diketahui 28dp (KDoc lama menulis 34) ·
+  `docs/DESIGN.md` §4 baris `headline-md`/`headline-sm` dikoreksi.
+- **Verifikasi perangkat tuntas (2026-11-20):** semua tiga koreksi di atas
+  terkonfirmasi, **dan glow ditulis ulang**. `Modifier.shadow` Compose terukur
+  hanya α0,16 pada tepi chip vs 0,63 di PNG (bayangan elevasi Android jauh lebih
+  lemah dari `box-shadow` CSS) → komponen baru `ui/component/Glow.kt`
+  (`pillGlow`: cincin sepusat 0,5dp, α per cincin dari profil Gaussian
+  `½·erfc(d/σ√2)`, σ = blur/2, clip vertikal via `clipRect`). Hasil terukur di
+  perangkat 1080×2400:
+  · chip aktif α0,67 di tepi → 0,38 pada 7dp → **potong keras 8dp** (design
+    0,63 → 0,40 → potong 9px) dan glow masuk margin 16dp (0,38 pada 8dp, 0,19
+    pada 15dp) — `FilterChipRow` kini punya `contentPadding` supaya LazyRow
+    membentang penuh (container desain `px-margin-mobile py-2`);
+  · pil Following **tinggi 36dp** (sebelumnya 31,7 — HTML `h-9`, PNG 36,2
+    terukur) dan glow-nya α0,34 pada 4dp (design 0,33); teks/ikon
+    `text-primary` → `Accent` (sebelumnya putih — remap §1 `#d0bcff`→`#8B5CF6`);
+  · FAB glow α0,54 di tepi (design 0,52), profil cocok ±0,03 sampai 30dp
+    (sebelumnya `shadow(12)` ≈ 0,03 — 15× terlalu lemah);
+  · jarak: judul "Discography"→chip 16,8dp (design 18) dan chip→kartu 16,4dp
+    (design 16) — header Discography dikoreksi ke `topSpacing = Space.lg` +
+    `bottomSpacing = Space.xs` (HTML: section sebelumnya `pb-space-lg`, header
+    `pb-space-xs`), kartu dapat `pt-2 pb-3`.
+  Gate: `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau · gerbang
+  dokumen A–L hijau · nol hex di luar `ui/theme/`. Bukti: `.scratch/v_top.png`,
+  `.scratch/v_chips.png` (tidak di-commit).
+- **Data:** `sample_*` (The Weeknd, 4 lagu, 4 album) — diganti saat M1/M4.
+
 ### Fase 3 — catatan hasil (2026-11-18)
 
 - Layar #1, #3, #4, #2 terpasang dan dicocokkan dengan PNG kanon lewat screenshot `.scratch/fase3-*.png` (tidak di-commit).
@@ -320,7 +389,7 @@ membaca ulang 17 layar yang sudah ada.
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
 | 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
 | 3 | Tab: #1 #3 #4 #2 | **[x] selesai 2026-11-18** — 4 layar terpasang & dicocokkan dengan PNG kanon |
-| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | **[~] berjalan** — #5 selesai 2026-11-19 |
+| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | **[~] berjalan** — #5 selesai 2026-11-19; **#8 selesai 2026-11-20** (verifikasi perangkat tuntas) |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |
 

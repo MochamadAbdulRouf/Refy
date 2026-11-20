@@ -102,6 +102,22 @@
     <string name="album_badge_explicit" translatable="false">E</string>
 
     <!-- ============================================================
+         ARTIST (#8) — kunci mengikuti docs/I18N-KEYS.md §9.
+         ============================================================ -->
+    <string name="artist_verified">Verified Artist</string>
+    <string name="artist_monthly_listeners">%1$s monthly listeners</string>
+    <string name="artist_streams">%1$s streams</string>
+    <string name="artist_following">Following</string>
+    <string name="artist_follow">Follow</string>
+    <string name="artist_popular">Popular</string>
+    <string name="artist_discography">Discography</string>
+    <string name="artist_see_discography">See discography</string>
+    <string name="artist_tab_popular_releases">Popular Releases</string>
+    <string name="artist_tab_albums">Albums</string>
+    <string name="artist_tab_singles_eps">Singles &amp; EPs</string>
+    <string name="artist_release_meta">%1$s • Album</string>
+
+    <!-- ============================================================
          SEMENTARA — data contoh Home. Belum ada resolver (M1), jadi kartu
          memakai judul statis ini. Semua kunci berawalan `sample_` DIBUANG
          saat data asli masuk; jangan dipakai layar lain.
@@ -170,4 +186,11 @@
     <string name="sample_track_faith" translatable="false">Faith</string>
     <string name="sample_track_blinding_lights" translatable="false">Blinding Lights</string>
     <string name="sample_track_in_your_eyes" translatable="false">In Your Eyes</string>
+    <string name="sample_track_starboy" translatable="false">Starboy</string>
+    <string name="sample_track_save_your_tears" translatable="false">Save Your Tears</string>
+    <string name="sample_track_die_for_you" translatable="false">Die For You</string>
+    <string name="sample_album_after_hours_deluxe" translatable="false">After Hours (Deluxe)</string>
+    <string name="sample_album_dawn_fm" translatable="false">Dawn FM</string>
+    <string name="sample_album_starboy" translatable="false">Starboy</string>
+    <string name="sample_album_beauty_behind" translatable="false">Beauty Behind the Madness</string>
 </resources>

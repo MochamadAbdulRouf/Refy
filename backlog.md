@@ -81,7 +81,7 @@ Status: `[ ]` belum · `[~]` sedang · `[x]` selesai. Tugas selesai dicentang, t
 - [x] **D1–D4 ditutup** (publik · tanpa login · tulis dari nol · Kotlin+Compose) — bukan lagi "menunggu jawaban"
 - [x] **D14–D16 dibuka dengan default tertulis** (sapaan tanpa nama · fitur non-v0.1 tidak dirender · tolak duplikat playlist)
 - [x] Perbaiki cacat dokumen: "10 layar Buat"→9 · "18 layar token"→17 · "19/21 entri screens.json"→18 html + 20 entri · h1 di #3,#4,#5→#2,#3,#4
-- [x] Buat **`docs/I18N-KEYS.md`** — inventaris 161 kunci string untuk 11 layar MVP; jadi daftar periksa audit M5
+- [x] Buat **`docs/I18N-KEYS.md`** — inventaris kunci string (161 awal; 168 per 2026-11-19 setelah #5 #8) untuk 11 layar MVP; jadi daftar periksa audit M5
 - [x] Perluas **`scripts/check-consistency.py`** dari 6 bagian jadi **11 gerbang (A–K)** + exit code, termasuk nomor layar, ukuran, hitungan snapshot, status keputusan, kunci i18n, dan `.gitignore` lewat `git check-ignore`
 - [x] Buat **`scripts/test-gates.py`** — uji negatif yang membuktikan ke-12 gerbang **bisa gagal** (gate yang tidak bisa gagal tidak memverifikasi apa pun)
 - [x] Rapikan `CLAUDE.md` (masih `<isi stack Anda>`), `index.md`, dan tambah workflow dokumen di `flows/06`
@@ -193,7 +193,7 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 - [x] #3 Library & Search Screen (tab Discover: Browse all, chip genre, Recently played) — **UI selesai 2026-11-18** (`ui/discover/`), data contoh `sample_*`. Ikon mic/kamera & "Explore tags" tidak dirender (D15); judul memakai `discover.title`, bukan `<h1>` desain
 - [x] #4 Your Library (tab Library: Playlists, Albums, Artists; Podcasts & Downloaded ditunda D15) — **UI selesai 2026-11-18** (`ui/library/`), data contoh `sample_*`; tombol "+" menyambung ke #14 di Fase 5. Rincian `PLAN.md` §5
 - [x] #5 Album Detail & Tracklist (`album-detail-tracklist-76a16cec`) — **UI selesai 2026-11-19** (`ui/album/`, route `album` dari kartu Home). Toolbar kembali/antrean/menu, hero 208dp + glow, badge, rekomendasi + refresh, baris aksi (favorit/riwayat/bagikan/shuffle/putar), tracklist 10 baris dengan baris aktif. Glyph antrean/shuffle/jam digambar `Canvas` (set inti tak punya). Unduh offline & chrome global tidak dirender. Rincian `PLAN.md` §5
-- [ ] #8 Artist Profile
+- [x] #8 Artist Profile (`artist-profile-ebadb5ac`) — **selesai 2026-11-20** (`ui/artist/`, route `artist` dari baris artis Library, `Glyphs.kt` baru: shuffle/equalizer bersama #5). Banding PNG: hero/aksi/baris/chip/kartu cocok (pitch baris 66,3dp vs 66px). Tiga koreksi pasca-band (judul bagian 22→18, glow chip aktif, tinggi chip 28dp) terverifikasi di perangkat 2026-11-20; glow ditulis ulang jadi `ui/component/Glow.kt` (`pillGlow`) karena `Modifier.shadow` terukur 4× lebih lemah dari box-shadow CSS; pil Following dikoreksi ke 36dp (HTML `h-9`) + teks `Accent`; FAB glow `pillGlow`. Rincian `PLAN.md` §5
 - [ ] #9 Now Playing Screen
 - [ ] #10 Playback Queue (checkbox multi-pilih + drag handle)
 - [ ] #12 Track Options Bottom Sheet

@@ -654,3 +654,114 @@ Ketiganya muncul dari audit 2026-11-12. Semuanya **bisa dijawab kapan saja sebel
 
 **Verifikasi:** `assembleDebug` hijau · APK terpasang · dicocokkan dengan PNG kanon lewat screenshot `.scratch/album-hero3.png` dan `.scratch/album-actions.png` · gate dokumen HIJAU (A–L) · nol `Color(0x` di luar `ui/theme/`.
 **Belum:** #8 Artist Profile, #9 Now Playing, #10 Playback Queue, #12 Track Options; blur kaca (R2) belum tersentuh.
+
+## 2026-11-19 — #8 Artist Profile + koreksi judul bagian lintas layar
+
+**Konteks:** layar kedua Fase 4. Route `artist` dibuka dari baris artis di Library
+(`lib5` "The Midnight"); kartu discography membuka route `album` (alur #8 → #5).
+
+**1. Glyph bersama dipindah ke `Glyphs.kt`**
+- Shuffle dan equalizer bergantung antara `AlbumDetailScreen` (#5) dan
+  `ArtistProfileScreen` (#8) — kode duplikat dihapus, pindah ke
+  `ui/component/Glyphs.kt`. Share atas dan titik-titik horizontal tetap lokal di
+  layar artis (hanya dipakai di sana); keduanya digambar `Canvas`
+  (`IosShare`/`MoreHoriz` tidak ada di `material-icons-core`).
+- **Alternatif ditolak:** menambah `material-icons-extended` (~20 MB) untuk ikon
+  kecil.
+
+**2. Warna dari sampel piksel PNG, bukan tebak kelas HTML**
+- Chip inaktif memakai `SurfaceHighest` — sampel PNG `#2a2a2c` (HTML
+  `bg-surface-container-high`) → remap §1. `FilterChipRow` mendapat parameter
+  `inactiveBackground` karena layar lain memakai `ChipInactive`.
+- Baris lagu aktif: latar `Surface` (HTML `surface-container-low` 60 % di atas
+  kanvas → remap `#1c1b1d` → §1), judul aktif `Accent` (DESIGN §6.4).
+- Judul aksi "See all"/"See discography" = `text-primary` → `Accent` (bukti HTML).
+
+**3. Koreksi judul bagian 22 → 18 (lintas layar, temuan saat verifikasi #8)**
+- Ukur PNG: "Popular" #8 lebar 63 px = 18 px; "Made For You" #1 tinggi 17 px;
+  kelas HTML `font-headline-sm` di Home, Discover ("Browse all"), album
+  ("Recommended Tracks"), dan artis — semuanya 18.
+- `SectionHeader` (dipakai #1/#3/#5) dan `ArtistSectionHeader` (#8) diubah
+  `headlineMd` → `headlineSm`. Catatan PLAN §5 #3 ("18 → 22 setelah banding
+  PNG") **salah dan dikoreksi**; `docs/DESIGN.md` §4 baris `headline-md` juga
+  dikoreksi (22 = judul Now Playing/sheet, bukan judul bagian).
+- **Alternatif ditolak:** parameter ukuran per layar — bukti menunjukkan semua
+  layar sama (18), jadi satu token cukup.
+
+**4. Glow chip aktif**
+- HTML Home dan artis memberi bayangan ungu kuat pada chip aktif
+  (`rgba(168,85,247)` 20–35 px); render pertama tidak punya. Ditambahkan
+  `shadow(16.dp, pill, AccentBright)` — sama tekniknya dengan pil Following.
+- Tinggi chip terukur 28 dp (line-height 16 + padding 6/14); KDoc lama menulis
+  34 — dikoreksi.
+
+**5. Jebakan alat yang terulang**
+- `adb` wireless pernah putus dua kali dalam satu sesi (perangkat `offline`,
+  lalu tidak bisa disambung ulang; `adb mdns services` kosong = wireless
+  debugging mati di ponsel). Screenshot juga pernah salah isi karena Discord
+  merebut fokus — pola lama tetap berlaku: `dumpsys window | grep mCurrentFocus`
+  sebelum percaya screenshot.
+
+**Verifikasi:** `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau · gate
+dokumen HIJAU (A–L) · nol `Color(0x` di luar `ui/theme/` · banding tahap 1 dengan
+PNG kanon cocok (hero, aksi, pitch baris 66,3 dp vs 66 px desain, chip, kartu
+148 dp).
+**Tindak lanjut (2026-11-20):** ketiga koreksi terverifikasi di perangkat; glow
+ditulis ulang — lihat entri 2026-11-20. Berikutnya #9 Now Playing (butuh
+keputusan blur `haze` vs RenderNode untuk R2), #10, #12.
+
+## 2026-11-20 — #8 verifikasi perangkat: glow ditulis ulang (`Modifier.shadow` tidak cukup)
+**Konteks:** cek ulang tiga koreksi 2026-11-19 di perangkat uji (Infinix X6886;
+adb tersambung ulang lewat mDNS `adb-15387705CP008700-3DPPkD._adb-tls-connect._tcp`
+— IP wireless lama sudah mati). Pengukuran piksel screenshot vs PNG kanon
+menemukan glow jauh lebih lemah dari desain.
+**1. Angka temuan (α terhadap canvas, sampel 1px dari tepi)**
+- Chip aktif `Modifier.shadow(16.dp)`: α0,16 — desain 0,63 (PNG, blur 20+35px).
+- FAB `shadow(12.dp)`: α0,03 — desain 0,52.
+- Pil Following `shadow(12.dp)`: α0,07 pada 4dp — desain 0,33.
+Bayangan elevasi Android jauh lebih lemah dan lebih sempit dari `box-shadow`
+CSS; menaikkan elevation tidak menutup jarak (bentuk jatuhnya beda).
+**2. Keputusan: `ui/component/Glow.kt` — `pillGlow` menggambar glow sendiri**
+- Cincin sepusat tiap 0,5dp dari tepi pil; α tiap cincin dari profil tepi
+  Gaussian CSS: `α(d) = 1 − Π(1 − αᵢ·½·erfc(d/(σᵢ√2)))`, σᵢ = blurᵢ/2.
+  `erfc` lewat aproksimasi Abramowitz & Stegun 7.1.26 (galat < 1,5·10⁻⁷).
+- Profil per komponen dari HTML + PNG: chip `[(1,0; 20), (0,7; 35)]` ·
+  Following `[(0,65; 16), (0,35; 28)]` · FAB `[(0,9; 26), (0,35; 56)]`
+  (FAB: HTML menulis `rgba(208,188,255,0,45) 0 0 24px`, tetapi sampel PNG
+  menunjukkan warna ungu penuh — dua lapis ini yang cocok dengan kurva terukur
+  0,52 → 0,27@13px → 0,08@29px).
+- `clipVerticalDp` memotong glow lewat `clipRect` — meniru `overflow` container
+  desain (chip `py-2` = 8dp). Default = tidak memotong.
+- **Alternatif ditolak:** (a) `Modifier.shadow` bertingkat — α menumpuk tetapi
+  kurva jatuh tetap terlalu tajam; (b) `RenderEffect` blur — API 31+, minSdk 26;
+  (c) `haze`/backdrop-blur — untuk latar, bukan glow bentuk (R2 tetap terbuka).
+**3. Susunan yang ikut dikoreksi (semua dari HTML + PNG)**
+- `FilterChipRow` dapat `contentPadding`; layar #8 memakainya
+  (`px-margin-mobile py-2`) supaya LazyRow membentang ke tepi layar — glow
+  horizontal masuk margin 16dp, vertikal terpotong 8dp seperti desain.
+- Pil Following tinggi **36dp** (HTML `h-9`; terukur 31,7 sebelum — PNG 36,2);
+  teks + ikon `text-primary` → `Accent` (sebelumnya putih; remap §1
+  `#d0bcff`→`#8B5CF6`).
+- Header "Discography": `topSpacing = Space.lg` (24, = `pb-space-lg` section
+  Popular) + `bottomSpacing = Space.xs` (8, = `pb-space-xs` header) — sebelumnya
+  8/12 seragam untuk kedua header. Kartu discography dapat `pt-2 pb-3`.
+**4. Hasil terukur di perangkat (1080×2400, 2,625 px/dp)**
+- Chip aktif: α0,67 di tepi → 0,38@7dp → **potong keras 8dp** (desain 0,63 →
+  0,40 → potong 9px); glow masuk margin (0,38@8dp → 0,19@15dp). Judul
+  "Discography" ink 18sp (lebar 64,4dp vs 63 desain).
+- Pil Following: 36,2dp; glow α0,34 pada 4dp (desain 0,33).
+- FAB: α0,54 di tepi (desain 0,52), profil cocok ±0,03 sampai 30dp.
+- Jarak: judul→chip 16,8dp (desain 18), chip→kartu 16,4dp (desain 16), baris
+  terakhir→judul Discography 24dp (design `pb-space-lg`).
+**5. Sisa yang dicatat (belum dikerjakan)**
+- Layar tab (#1/#3/#4/#2) belum dapat `contentPadding` per layar: glow chip-nya
+  masih terpotong di batas baris, belum masuk margin seperti Home PNG, dan Home
+  belum punya glow bawah 16px (`pb-space-md`). Dibereskan saat layar itu dicek
+  ulang.
+- Label aksi `text-primary` di `SectionHeader` (Home "Show all") masih
+  `TextMuted`, sedangkan #8 memakai `Accent` — perlu diseragamkan.
+- Badge "VERIFIED ARTIST" masih `Modifier.shadow(8)`; HTML-nya hanya `shadow-sm`
+  (tanpa glow ungu) — kandidat pembersihan saat menyentuh layar ini lagi.
+**Verifikasi:** `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau · gate
+dokumen A–L hijau · nol `Color(0x` di luar `ui/theme/`. Bukti screenshot:
+`.scratch/v_top.png`, `.scratch/v_chips.png` (tidak di-commit).

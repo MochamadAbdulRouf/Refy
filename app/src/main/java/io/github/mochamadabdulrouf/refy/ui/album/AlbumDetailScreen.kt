@@ -35,7 +35,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
@@ -47,8 +46,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.mochamadabdulrouf.refy.R
 import io.github.mochamadabdulrouf.refy.ui.component.ArtworkPlaceholder
+import io.github.mochamadabdulrouf.refy.ui.component.PlayingBars
 import io.github.mochamadabdulrouf.refy.ui.component.SearchField
 import io.github.mochamadabdulrouf.refy.ui.component.SectionHeader
+import io.github.mochamadabdulrouf.refy.ui.component.ShuffleGlyph
 import io.github.mochamadabdulrouf.refy.ui.theme.NocturneTheme
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyColors
 import io.github.mochamadabdulrouf.refy.ui.theme.RefyDimens
@@ -345,6 +346,7 @@ private fun RecommendationRow(
 /** Favorit · riwayat · bagikan · (jarak) · shuffle · tombol putar besar bergradien. */
 @Composable
 private fun AlbumActions(onPlay: () -> Unit, onShuffle: () -> Unit) {
+    val shuffleCd = stringResource(R.string.album_cd_shuffle)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -387,10 +389,11 @@ private fun AlbumActions(onPlay: () -> Unit, onShuffle: () -> Unit) {
                 modifier = Modifier
                     .size(RefyDimens.Size.iconButton)
                     .clip(CircleShape)
+                    .semantics { this.contentDescription = shuffleCd }
                     .clickable(role = Role.Button, onClick = onShuffle),
                 contentAlignment = Alignment.Center,
             ) {
-                ShuffleGlyph()
+                ShuffleGlyph(Modifier.size(22.dp))
             }
             Box(
                 modifier = Modifier
@@ -439,7 +442,10 @@ private fun TrackRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RefyShapesTokens.medium)
-            .background(if (isPlaying) RefyColors.SurfaceElevated else Color.Transparent)
+            // Desain: latar baris aktif #2A2A2C → remap Kubu B = SurfaceHighest
+            // (bukan SurfaceElevated yang datang dari #201f22). Judul aktif
+            // memakai accent — DESIGN §6.4. Banding sampel piksel 2026-11-19.
+            .background(if (isPlaying) RefyColors.SurfaceHighest else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(RefyDimens.Space.xs),
         verticalAlignment = Alignment.CenterVertically,
@@ -449,7 +455,7 @@ private fun TrackRow(
             contentAlignment = Alignment.Center,
         ) {
             if (isPlaying) {
-                PlayingBars()
+                PlayingBars(Modifier.size(14.dp))
             } else {
                 Text(
                     text = track.number.toString(),
@@ -464,7 +470,7 @@ private fun TrackRow(
                 Text(
                     text = track.title,
                     style = RefyType.bodyLg,
-                    color = RefyColors.TextPrimary,
+                    color = if (isPlaying) RefyColors.Accent else RefyColors.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
@@ -543,25 +549,6 @@ private fun CircleButton(
             )
         } else {
             content?.invoke()
-        }
-    }
-}
-
-/** Tiga batang equalizer kecil, penanda lagu yang sedang diputar. */
-@Composable
-private fun PlayingBars() {
-    Canvas(modifier = Modifier.size(width = 14.dp, height = 14.dp)) {
-        val bars = listOf(0.45f, 1f, 0.7f)
-        val barWidth = size.width / 7f
-        bars.forEachIndexed { index, fraction ->
-            val barHeight = size.height * fraction
-            drawLine(
-                color = RefyColors.Accent,
-                start = Offset(barWidth * (index * 2 + 1), size.height),
-                end = Offset(barWidth * (index * 2 + 1), size.height - barHeight),
-                strokeWidth = barWidth,
-                cap = StrokeCap.Round,
-            )
         }
     }
 }
@@ -649,46 +636,6 @@ private fun ClockGlyph(diameter: androidx.compose.ui.unit.Dp, contentDescription
             strokeWidth = stroke,
             cap = StrokeCap.Round,
         )
-    }
-}
-
-/** Glyph shuffle: dua garis bersilang dengan ujung panah — set inti tidak punya. */
-@Composable
-private fun ShuffleGlyph() {
-    Canvas(modifier = Modifier.size(22.dp)) {
-        val color = RefyColors.Accent
-        val stroke = 2f
-        val endTop = Offset(size.width * 0.78f, size.height * 0.26f)
-        val endBottom = Offset(size.width * 0.78f, size.height * 0.74f)
-        drawLine(
-            color = color,
-            start = Offset(size.width * 0.06f, size.height * 0.74f),
-            end = endTop,
-            strokeWidth = stroke,
-            cap = StrokeCap.Round,
-        )
-        drawLine(
-            color = color,
-            start = Offset(size.width * 0.06f, size.height * 0.26f),
-            end = endBottom,
-            strokeWidth = stroke,
-            cap = StrokeCap.Round,
-        )
-        drawPath(arrowHead(endTop, pointingUp = true), color)
-        drawPath(arrowHead(endBottom, pointingUp = false), color)
-    }
-}
-
-/** Segitiga ujung panah di [tip], menghadap kanan-atas atau kanan-bawah. */
-private fun arrowHead(tip: Offset, pointingUp: Boolean): Path {
-    val length = tip.x * 0.22f
-    val half = length * 0.55f
-    val verticalShift = if (pointingUp) -half else half
-    return Path().apply {
-        moveTo(tip.x, tip.y)
-        lineTo(tip.x - length, tip.y - verticalShift)
-        lineTo(tip.x - length, tip.y + verticalShift)
-        close()
     }
 }
 
