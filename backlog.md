@@ -194,7 +194,7 @@ Mengikuti **18 layar UI + 2 aset** desain (17 layar nyata + 1 artefak); MVP diku
 - [x] #4 Your Library (tab Library: Playlists, Albums, Artists; Podcasts & Downloaded ditunda D15) — **UI selesai 2026-11-18** (`ui/library/`), data contoh `sample_*`; tombol "+" menyambung ke #14 di Fase 5. Rincian `PLAN.md` §5
 - [x] #5 Album Detail & Tracklist (`album-detail-tracklist-76a16cec`) — **UI selesai 2026-11-19** (`ui/album/`, route `album` dari kartu Home). Toolbar kembali/antrean/menu, hero 208dp + glow, badge, rekomendasi + refresh, baris aksi (favorit/riwayat/bagikan/shuffle/putar), tracklist 10 baris dengan baris aktif. Glyph antrean/shuffle/jam digambar `Canvas` (set inti tak punya). Unduh offline & chrome global tidak dirender. Rincian `PLAN.md` §5
 - [x] #8 Artist Profile (`artist-profile-ebadb5ac`) — **selesai 2026-11-20** (`ui/artist/`, route `artist` dari baris artis Library, `Glyphs.kt` baru: shuffle/equalizer bersama #5). Banding PNG: hero/aksi/baris/chip/kartu cocok (pitch baris 66,3dp vs 66px). Tiga koreksi pasca-band (judul bagian 22→18, glow chip aktif, tinggi chip 28dp) terverifikasi di perangkat 2026-11-20; glow ditulis ulang jadi `ui/component/Glow.kt` (`pillGlow`) karena `Modifier.shadow` terukur 4× lebih lemah dari box-shadow CSS; pil Following dikoreksi ke 36dp (HTML `h-9`) + teks `Accent`; FAB glow `pillGlow`. Rincian `PLAN.md` §5
-- [ ] #9 Now Playing Screen
+- [x] #9 Now Playing Screen
 - [ ] #10 Playback Queue (checkbox multi-pilih + drag handle)
 - [ ] #12 Track Options Bottom Sheet
 - [ ] #14 Create Playlist

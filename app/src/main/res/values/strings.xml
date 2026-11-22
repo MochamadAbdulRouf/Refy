@@ -118,6 +118,26 @@
     <string name="artist_release_meta">%1$s • Album</string>
 
     <!-- ============================================================
+         NOW PLAYING (#9) — kunci mengikuti docs/I18N-KEYS.md §10.
+         Bagian lirik: teksnya DATA (v0.2); kartu hanya muncul kalau
+         lagu punya lirik — di v0.1 tidak dirender (D15).
+         ============================================================ -->
+    <string name="np_title">Now Playing Screen</string>
+    <string name="np_playing_from_playlist">Playing from playlist</string>
+    <string name="np_badge_lossless">Lossless</string>
+    <string name="np_audio_output">Audio Output</string>
+    <string name="np_live_lyrics">Live Lyrics</string>
+    <string name="np_expand">Expand</string>
+    <string name="np_remaining">-%1$s</string>
+    <string name="np_cd_favorite">Add to favorites</string>
+    <string name="np_cd_queue">Open queue</string>
+    <string name="np_cd_output">Change audio output</string>
+    <string name="np_cd_lyrics">Show lyrics</string>
+    <string name="np_cd_play_pause">Play or pause</string>
+    <string name="np_cd_previous">Previous track</string>
+    <string name="np_cd_next">Next track</string>
+
+    <!-- ============================================================
          SEMENTARA — data contoh Home. Belum ada resolver (M1), jadi kartu
          memakai judul statis ini. Semua kunci berawalan `sample_` DIBUANG
          saat data asli masuk; jangan dipakai layar lain.
@@ -132,6 +152,16 @@
     <string name="sample_trending_1_artist" translatable="false">CHVRCHES</string>
     <string name="sample_trending_2" translatable="false">Midnight Mirage</string>
     <string name="sample_trending_2_artist" translatable="false">Kavinsky</string>
+    <string name="sample_now_playing_artist" translatable="false">Kavinsky &amp; The Weeknd</string>
+    <string name="sample_playlist_violet_nights" translatable="false">Violet Nights</string>
+    <!-- Isi "poster" di dalam kartu artwork #9 (PNG menampilkan album/lagu
+         ini; HTML kanon kosong — PNG yang menang). Data, bukan teks UI. -->
+    <string name="sample_artwork_caption" translatable="false">SYNTHESIZED DREAMS</string>
+    <string name="sample_artwork_title" translatable="false">AURORA_9</string>
+    <string name="sample_audio_output_airpods_max" translatable="false">AirPods Max • Violet Lounge</string>
+    <string name="sample_lyric_1" translatable="false">Electric sky lights up the horizon</string>
+    <string name="sample_lyric_2" translatable="false">Driving through the neon glow into the midnight...</string>
+    <string name="sample_lyric_3" translatable="false">Lost within the shadows where we ignite</string>
     <string name="sample_badge_weekly" translatable="false">WEEKLY</string>
     <string name="sample_badge_trending" translatable="false">#1 TRENDING</string>
     <string name="sample_genre_electronic" translatable="false">Electronic &amp; Synth</string>

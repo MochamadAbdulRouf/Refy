@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,6 +35,8 @@ import io.github.mochamadabdulrouf.refy.ui.home.HomeScreen
 import io.github.mochamadabdulrouf.refy.ui.home.sampleHomeUiState
 import io.github.mochamadabdulrouf.refy.ui.library.LibraryScreen
 import io.github.mochamadabdulrouf.refy.ui.library.sampleLibraryUiState
+import io.github.mochamadabdulrouf.refy.ui.nowplaying.NowPlayingScreen
+import io.github.mochamadabdulrouf.refy.ui.nowplaying.sampleNowPlayingUiState
 import io.github.mochamadabdulrouf.refy.ui.search.SearchResultsScreen
 import io.github.mochamadabdulrouf.refy.ui.search.sampleSearchUiState
 import io.github.mochamadabdulrouf.refy.ui.theme.NocturneTheme
@@ -53,6 +56,10 @@ import io.github.mochamadabdulrouf.refy.ui.theme.RefyType
  *
  * Konten diberi jarak aman bawah [RefyDimens.Offset.contentBottom] (160dp)
  * supaya baris terakhir tidak tertutup mini-player + nav.
+ *
+ * [showNavigation] = `false` untuk layar penuh seperti #9 Now Playing: pil nav
+ * dan mini-player disembunyikan, dan jarak aman 160dp tidak dipakai — desain
+ * layar itu tidak punya keduanya (lihat PNG kanon).
  */
 @Composable
 fun ScaffoldShell(
@@ -60,31 +67,34 @@ fun ScaffoldShell(
     onSelect: (RefyDestination) -> Unit,
     modifier: Modifier = Modifier,
     miniPlayer: (@Composable () -> Unit)? = null,
+    showNavigation: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     Box(modifier = modifier.fillMaxSize().background(RefyColors.Canvas)) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = RefyDimens.Offset.contentBottom),
+                .padding(bottom = if (showNavigation) RefyDimens.Offset.contentBottom else 0.dp),
         ) {
             content()
         }
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(horizontal = RefyDimens.Margin.mobile)
-                .padding(bottom = RefyDimens.Offset.navBarBottom)
-                .navigationBarsPadding(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            if (miniPlayer != null) {
-                miniPlayer()
-                Spacer(Modifier.height(RefyDimens.Offset.gapNavToMiniPlayer))
+        if (showNavigation) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(horizontal = RefyDimens.Margin.mobile)
+                    .padding(bottom = RefyDimens.Offset.navBarBottom)
+                    .navigationBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                if (miniPlayer != null) {
+                    miniPlayer()
+                    Spacer(Modifier.height(RefyDimens.Offset.gapNavToMiniPlayer))
+                }
+                BottomNavPill(selected = selected, onSelect = onSelect)
             }
-            BottomNavPill(selected = selected, onSelect = onSelect)
         }
     }
 }
@@ -124,6 +134,8 @@ fun RefyRoot(modifier: Modifier = Modifier) {
             }
         },
         modifier = modifier,
+        // #9 adalah layar penuh: tanpa pil nav & mini-player (PNG kanon).
+        showNavigation = currentRoute != NOW_PLAYING_ROUTE,
     ) {
         NavHost(
             navController = navController,
@@ -172,6 +184,8 @@ fun RefyRoot(modifier: Modifier = Modifier) {
                 AlbumDetailScreen(
                     state = sampleAlbumDetailUiState(),
                     onBack = { navController.popBackStack() },
+                    // "Play" album → layar pemutar (flows/00: #5 → #9).
+                    onPlay = { navController.navigate(NOW_PLAYING_ROUTE) { launchSingleTop = true } },
                 )
             }
             composable(ARTIST_ROUTE) {
@@ -180,6 +194,14 @@ fun RefyRoot(modifier: Modifier = Modifier) {
                     onBack = { navController.popBackStack() },
                     // Kartu discography membuka detail album (flows/00: #8 → #5).
                     onAlbumClick = { navController.navigate(ALBUM_ROUTE) { launchSingleTop = true } },
+                    // FAB putar → layar pemutar (#8 → #9).
+                    onPlay = { navController.navigate(NOW_PLAYING_ROUTE) { launchSingleTop = true } },
+                )
+            }
+            composable(NOW_PLAYING_ROUTE) {
+                NowPlayingScreen(
+                    state = sampleNowPlayingUiState(),
+                    onBack = { navController.popBackStack() },
                 )
             }
         }
@@ -194,6 +216,9 @@ private const val ALBUM_ROUTE = "album"
 
 /** Layar #8 — dibuka dari baris artis di Library; kembali lewat tombol panah. */
 private const val ARTIST_ROUTE = "artist"
+
+/** Layar #9 — dibuka dari aksi putar #5/#8; kembali lewat chevron turun. */
+private const val NOW_PLAYING_ROUTE = "nowPlaying"
 
 @Composable
 private fun PlaceholderScreen(destination: RefyDestination) {

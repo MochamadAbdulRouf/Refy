@@ -176,6 +176,7 @@ Tema **tidak** memengaruhi teks (D12, dark-only). Bahasa Inggris di `values/`;
 
 | Kunci | String English | Catatan |
 |---|---|---|
+| `np.title` | Now Playing Screen | judul header `h1` (ditambahkan 2026-11-22) |
 | `np.playing_from_playlist` | Playing from playlist | |
 | `np.badge_lossless` | Lossless | |
 | `np.audio_output` | Audio Output | |
@@ -185,9 +186,17 @@ Tema **tidak** memengaruhi teks (D12, dark-only). Bahasa Inggris di `values/`;
 | `np.remaining` | -%1$s | hitung mundur |
 | `np.cd_favorite` / `np.cd_queue` | Add to favorites / Open queue | |
 | `np.cd_output` / `np.cd_lyrics` | Change audio output / Show lyrics | |
+| `np.cd_play_pause` / `np.cd_previous` / `np.cd_next` | Play or pause / Previous track / Next track | label aksesibilitas transport (ditambahkan 2026-11-22 saat #9 dibangun) |
 
 > Teks lirik yang terlihat di desain = **data**. Lirik penuh adalah v0.2
-> (`expanded-live-lyrics` ditunda per D7) — di v0.1 bagian lirik **disembunyikan**.
+> (`expanded-live-lyrics` ditunda per D7). Kartu pratinjau lirik hanya dirender
+> bila lagu punya data lirik — selama prototipe, data contoh
+> (`sample_lyric_*`) mengisinya supaya layar sama dengan PNG; produk v0.1 tanpa
+> lirik tidak merendernya.
+>
+> Isi poster di dalam kartu artwork (`SYNTHESIZED DREAMS`, `AURORA_9`, angka
+> `1:34 / 3:58`) juga **data**, bukan i18n — disimpan sebagai `sample_artwork_*`
+> (`translatable="false"`) sampai resolver M1 mengisi judul sungguhan.
 
 ## 11. #10 Playback Queue
 

@@ -765,3 +765,70 @@ CSS; menaikkan elevation tidak menutup jarak (bentuk jatuhnya beda).
 **Verifikasi:** `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau · gate
 dokumen A–L hijau · nol `Color(0x` di luar `ui/theme/`. Bukti screenshot:
 `.scratch/v_top.png`, `.scratch/v_chips.png` (tidak di-commit).
+---
+## 2026-11-22 — #9 Now Playing: poster kartu dari PNG, glow cincin ditumpuk, layar penuh
+**1. PNG menang atas HTML untuk kartu artwork**
+- HTML kanon hanya punya kotak kosong `w-[300px] h-[300px] rounded-2xl
+  bg-surface-container-highest`. PNG-nya berisi **poster**: latar nebula,
+  tile artwork 156dp, panel gelap mulai 140dp, "SYNTHESIZED DREAMS",
+  "AURORA_9" + titik, progres 3dp, "1:34 / 3:58". Poster disusun ulang dari
+  elemen Compose (`NebulaBackdrop`, `ArtworkPlaceholder`, teks data
+  `sample_artwork_*`); tidak ada aset gambar Stitch yang disalin.
+- **Alternatif ditolak:** memakai gradien polos tanpa poster (tidak sama dengan
+  PNG); menyalin berkas gambar dari `.stitch` (aset desainer; `.stitch` juga
+  tidak di-commit dan gambar asli baru ada setelah M1).
+
+**2. Blur latar tidak dirender di layar ini**
+- Kaca `backdrop-blur-xl/md` (#9: pil, badge, kartu lirik) duduk di atas latar
+  datar + glow, bukan di atas konten bergulir → dirender sebagai permukaan
+  translusen + `pillGlow`. Blur nyata (haze vs RenderNode) tetap terbuka (R2)
+  dan hanya diselesaikan untuk kaca shell (pil nav + mini-player).
+- **Alasan:** `Modifier.blur` butuh API 31 (minSdk 26) dan layer blur untuk
+  sepuluh komponen di satu layar boros GPU di perangkat 7,4 GB kelas ini;
+  hasil visualnya (permukaan translusen di atas glow) setara.
+
+**3. `pillGlow` ditulis ulang: cincin tumpang tindih 3×**
+- Cincin 0,5dp yang hanya **bersentuhan** menyisakan jahitan antialias; pada
+  glow besar (tombol putar 72dp, kartu 300dp) jahitan itu terlihat sebagai
+  garis-garis sepusat. Pengukuran profil juga menunjukkan HTML #9 menulis
+  blur yang jauh lebih lebar dari PNG.
+- Perbaikan: goresan setebal **3× langkah**, α per goresan `1−(1−α)^(1/3)`
+  sehingga total tiap piksel tetap `glowAlphaAt` — profil tidak berubah
+  (glow #8 yang sudah diverifikasi tetap cocok ±0,03).
+- Profil diukur **ulang dari PNG #9**: tombol putar α0,61 tepi → 0,38@10 →
+  0,23@18 → 0,09@34 (satu lapis blur 24, reach 44dp; HTML 28/55/80 ditolak
+  karena terlalu lebar) · thumb scrubber 0,53@8 → 0,28@20 → 0,12@32, reach 64 ·
+  kartu 0,80@4 → 0,63@16 → 0,40@32, reach 130.
+- **Alternatif ditolak:** `Modifier.shadow` bertumpuk (bentuk falloff tetap
+  salah, sudah dibuktikan 2026-11-20) · `BlurMaskFilter` (tepi HW canvas
+  diabaikan diam-diam di API 26–27) · bitmap + blur CPU (biaya memori/waktu
+  tidak sepadan untuk 4 glow).
+
+**4. #9 adalah layar penuh**
+- `ScaffoldShell` dapat `showNavigation` (default `true`); route `nowPlaying`
+  memakai `false` → pil nav + mini-player tidak dirender, jarak aman 160dp
+  tidak dipakai. Desain #9 tidak punya keduanya, dan pemutar adalah tujuan
+  akhir (kembali lewat chevron turun).
+
+**5. Kartu lirik dirender dengan data contoh**
+- Kartu lirik = bagian kanon #9. Syarat render tetap: `state.lyrics` berisi.
+  Data contoh mengisi 3 baris (`sample_lyric_*`) supaya layar sama dengan PNG;
+  tanpa lirik nyata (#11 = v0.2) kartu tidak dirender. D15 tidak berubah —
+  fitur lirik tetap v0.2, yang dirender hanyalah tampilan data contoh.
+
+**6. Glyph baru di `ui/component/Glyphs.kt`**
+- `PauseGlyph`, `SkipNextGlyph`, `SkipPreviousGlyph`, `RepeatGlyph`,
+  `HeadphonesGlyph`, `QueueMusicGlyph`, `MicGlyph` — `material-icons-core`
+  1.7.8 tidak memuatnya; extended (±20 MB) tetap ditolak (keputusan Fase 2).
+  `MiniPlayer` memakai `PauseGlyph` bersama (duplikat privatnya dihapus).
+
+**7. Kotak scrubber 30dp**
+- HTML `py-3` (12) + trek 6 + `py-3` (12) = 30dp. Kotak 16dp sebelumnya
+  membuat trek 10dp terlalu tinggi dan waktu 8dp terlalu dekat dengan trek.
+  Setelah 30dp: trek 519,6–525,7 (design 522–528), waktu 540,2–547,4
+  (design 540–548), bar audio 651,4 (652), kartu lirik 721,1 (720).
+
+**Verifikasi:** `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau ·
+gerbang dokumen A–L hijau · nol `Color(0x` di luar `ui/theme/`. Bukti
+screenshot: `.scratch/np4.png`, `.scratch/np5.png`, `.scratch/np_compare5.png`
+(tidak di-commit).

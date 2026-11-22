@@ -171,27 +171,7 @@ private fun EqualizerGlyph(color: Color, modifier: Modifier = Modifier) {
     }
 }
 
-/** Dua batang vertikal — pengganti `Icons.Filled.Pause` yang tidak ada di set inti. */
-@Composable
-private fun PauseGlyph(color: Color, modifier: Modifier = Modifier) {
-    Canvas(modifier) {
-        val barWidth = size.width * 0.22f
-        val gap = size.width * 0.2f
-        val height = size.height
-        drawRoundRect(
-            color = color,
-            topLeft = Offset(x = (size.width - (barWidth * 2 + gap)) / 2f, y = 0f),
-            size = Size(barWidth, height),
-            cornerRadius = CornerRadius(barWidth / 3f, barWidth / 3f),
-        )
-        drawRoundRect(
-            color = color,
-            topLeft = Offset(x = (size.width - (barWidth * 2 + gap)) / 2f + barWidth + gap, y = 0f),
-            size = Size(barWidth, height),
-            cornerRadius = CornerRadius(barWidth / 3f, barWidth / 3f),
-        )
-    }
-}
+/** Dua batang vertikal — sekarang dari `Glyphs.kt` (dipakai juga oleh #9). */
 
 @Composable
 private fun PlayPauseButton(isPlaying: Boolean, onClick: () -> Unit) {

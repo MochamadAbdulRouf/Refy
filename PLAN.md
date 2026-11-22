@@ -1,7 +1,8 @@
 # PLAN — Implementasi UI dari desain Stitch
 
 Status: **berjalan** — Fase 0–3 selesai (2026-11-16/18), Fase 4 dikerjakan
-(#5 selesai 2026-11-19, #8 selesai 2026-11-20).
+(#5 selesai 2026-11-19, #8 selesai 2026-11-20,
+#9 selesai 2026-11-22).
 Dibuat: 2026-11-15.
 
 Gerbang dokumen: `python scripts/check-consistency.py` → **HIJAU, exit 0** (A–L lolos,
@@ -61,7 +62,7 @@ dikerjakan lebih dulu), `LANJUT` = 6 layar sisanya setelah #16 selesai.
 | 6 | Album Detail - After Hours | `album-detail-after-hours-f4bb6b8c` | — | LANJUT | [ ] varian #5 — dipakai sebagai uji tema Kubu B penuh |
 | 7 | Playlist Detail - Late Night Drives | `playlist-detail-late-night-drives-2f7236b9` | — | LANJUT | [ ] butuh data playlist (M4) |
 | 8 | Artist Profile | `artist-profile-ebadb5ac` | ✅ | MVP-6 | [x] |
-| 9 | Now Playing Screen | `now-playing-screen-57a3bcf2` | ✅ | MVP-7 | [ ] |
+| 9 | Now Playing Screen | `now-playing-screen-57a3bcf2` | ✅ | MVP-7 | [x] |
 | 10 | Playback Queue | `playback-queue-a12c7d72` | ✅ | MVP-8 | [ ] |
 | 11 | Expanded Live Lyrics | `expanded-live-lyrics-002312fb` | — | LANJUT | [ ] data lirik belum ada (v0.2) — render shell + keadaan kosong |
 | 12 | Track Options Bottom Sheet | `track-options-bottom-sheet-23b6e965` | ✅ | MVP-9 | [ ] |
@@ -361,6 +362,43 @@ Format: tanggal · ukuran · token · kunci i18n · penyimpangan.
   `.scratch/v_chips.png` (tidak di-commit).
 - **Data:** `sample_*` (The Weeknd, 4 lagu, 4 album) — diganti saat M1/M4.
 
+### #9 Now Playing Screen — 2026-11-22
+- **Berkas:** `ui/nowplaying/NowPlayingScreen.kt`, `NowPlayingUiState.kt`; glyph
+  baru di `ui/component/Glyphs.kt` (Pause, SkipNext, SkipPrevious, Repeat,
+  Headphones, QueueMusic, Mic); glow di `ui/component/Glow.kt`
+  (`ArtworkCardGlow`, `PlayButtonGlow`, `ScrubberThumbGlow`, `LyricsCardGlow`);
+  route `nowPlaying` di `RefyRoot.kt` (dari #5 Play dan FAB #8).
+- **Kartu artwork = poster.** HTML kanon hanya kotak kosong; PNG berisi poster
+  (latar nebula, tile 156dp di 64dp, panel gelap mulai 140dp, "SYNTHESIZED
+  DREAMS", "AURORA_9" + titik 11dp, progres 3dp sisipan 23dp, "1:34 / 3:58").
+  Semua disusun ulang dari elemen Compose; teksnya data (`sample_artwork_*`).
+  Terukur di perangkat (design-units, skala 2,625, offset status 30,5dp):
+  kartu 116–416 · caption 352,8–360 (design 352–359) · judul 368,8–388
+  (367–383, termasuk titik) · bilah 396,6–399 (397–400) · waktu 404–415
+  (408–413).
+- **Irama vertikal terukur:** trek scrubber 519,6–525,7 (design 522–528) ·
+  waktu 540,2–547,4 (540–548) · bar audio 651,4 (652) · kartu lirik 721,1
+  (720) · header lirik 734,5–751,6 (736–750) · baris lirik 775/801,5/825,5/
+  851,8 (771/801/825/855). Kunci: kotak trek scrubber **30dp** (`py-3` 12 +
+  trek 6 + 12) — kotak 16dp sebelumnya membuat trek 10dp terlalu tinggi.
+- **Glow:** cincin 0,5dp yang bersentuhan menyisakan jahitan AA (garis-garis
+  pada glow besar) → `pillGlow` kini menggambar goresan tumpang tindih 3×
+  langkah dengan α `1−(1−α)^(1/3)`, total tetap `glowAlphaAt`. Profil #9
+  diukur ulang dari PNG: putar α0,61→0,23@18→0,09@34 (satu lapis blur 24,
+  reach 44dp) · thumb 0,53@8→0,28@20→0,12@32 (reach 64) · kartu
+  0,80@4→0,40@32 (reach 130).
+- **Layar penuh:** `ScaffoldShell(showNavigation = false)` untuk route ini —
+  pil nav + mini-player tidak dirender, jarak aman 160dp tidak dipakai.
+- **Lirik:** kartu dirender bila `state.lyrics` berisi; data contoh mengisi 3
+  baris supaya layar sama dengan PNG. Tanpa lirik nyata (#11 = v0.2) kartu
+  tidak dirender (D15 tetap).
+- **Penyimpangan:** latar kartu + tile = gradien token (gambar Stitch tidak
+  disalin; asli baru ada setelah M1) · blur latar tidak dirender (`haze` vs
+  RenderNode masih terbuka untuk kaca shell, `keputusan.md` 2026-11-22) ·
+  header tanpa logo/avatar (D15).
+- Gate: `assembleDebug` + `lintDebug` + `testDebugUnitTest` hijau · gerbang
+  dokumen A–L hijau · nol hex di luar `ui/theme/`. Bukti: `.scratch/np4.png`,
+  `.scratch/np5.png`, `.scratch/np_compare5.png` (tidak di-commit).
 ### Fase 3 — catatan hasil (2026-11-18)
 
 - Layar #1, #3, #4, #2 terpasang dan dicocokkan dengan PNG kanon lewat screenshot `.scratch/fase3-*.png` (tidak di-commit).
@@ -389,7 +427,7 @@ membaca ulang 17 layar yang sudah ada.
 | 1 | Token & tema | **[x] selesai 2026-11-16** — token di §4, kode di `ui/theme/` |
 | 2 | Kerangka & komponen | **[x] selesai 2026-11-18** — shell, pil nav, `MiniPlayer`; komponen daftar dipindah ke Fase 3 |
 | 3 | Tab: #1 #3 #4 #2 | **[x] selesai 2026-11-18** — 4 layar terpasang & dicocokkan dengan PNG kanon |
-| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | **[~] berjalan** — #5 selesai 2026-11-19; **#8 selesai 2026-11-20** (verifikasi perangkat tuntas) |
+| 4 | Detail & pemutar: #5 #8 #9 #10 #12 | **[~] berjalan** — #5 selesai 2026-11-19; **#8 selesai 2026-11-20** (verifikasi perangkat tuntas); **#9 selesai 2026-11-22** |
 | 5 | #14 #16 + penutup MVP | [ ] |
 | 6 | Lanjutan: #6 #15 #13 #7 #17 #11 | [ ] |
 
